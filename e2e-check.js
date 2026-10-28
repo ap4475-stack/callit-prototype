@@ -5,6 +5,13 @@ window.__e2e = { done: false }; (async () => {
   const click = async (a, v, wait = 80) => { const el = [...document.querySelectorAll('#app [data-a]')].find(e => e.dataset.a === a && (v === undefined || e.dataset.v === String(v))); if (!el) { res.push(['click', `${a}|${v} not on screen`, false]); return false; } el.click(); await sleep(wait); return true; };
   const reset = () => { S.view = 'app'; S.sheet = null; S.moment = false; S.story = false; S.lock = false; S.onb = null; S.confirm = null; S.answerOpen = false; S.signup = false; S.toast = null; S.tab = 'foryou'; S.topic = 'all'; render(); };
 
+  // 0. marketing homepage -> tonight's call, invite preview, start a group
+  S.view = 'home'; render(); await sleep(60); ok('home', 'homepage renders with tonight\'s calls', document.querySelector('.home') && document.querySelectorAll('.hl').length > 0);
+  { const id = document.querySelector('.hl').dataset.v; await click('homecall', id); ok('home', 'a tonight call opens the call sheet in the app', S.view === 'app' && S.sheet === 'quick'); }
+  S.view = 'home'; S.sheet = null; render(); await sleep(40); await click('homeinvite', 'fam'); ok('home', 'group card opens that group\'s invite', S.view === 'join' && S.invite === 'fam');
+  await click('gohome'); ok('home', 'logo on the invite goes back home', S.view === 'home');
+  await click('homestart'); ok('home', 'Start a group opens the welcome', S.view === 'app' && S.onb && S.onb.step === 0);
+  S.onb = null; S.view = 'home'; render(); await sleep(40); await click('homego', 'play'); ok('home', 'feature card opens Play', S.view === 'app' && S.tab === 'play');
   // 1. invite -> sign-up -> interests -> feed
   ACT.invite('hall'); await sleep(80); ok('join', 'Hall 4B invite shows', /Hall/.test(document.querySelector('.jtitle').textContent));
   await click('joinstart'); ok('join', 'sign-up sheet opens', document.getElementById('signupform'));

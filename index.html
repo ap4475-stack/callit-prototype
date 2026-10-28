@@ -558,7 +558,7 @@ body { overflow: hidden; }
 .band-friends { --band-accent: var(--primary); background: #0f1017; }
 
 /* ---------- design notes drawer ---------- */
-.notesbtn { position: fixed; z-index: 120; top: max(12px, env(safe-area-inset-top, 0px)); right: max(12px, env(safe-area-inset-right, 0px)); height: 34px; padding: 0 12px; border-radius: 999px; background: rgba(245,244,248,.92); color: #0c0d13; font-weight: 800; font-size: var(--fs-xs); display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 6px 20px rgba(0,0,0,.35); }
+.notesbtn { position: fixed; z-index: 120; bottom: calc(106px + env(safe-area-inset-bottom, 0px)); right: max(12px, env(safe-area-inset-right, 0px)); height: 34px; padding: 0 12px; border-radius: 999px; background: rgba(245,244,248,.92); color: #0c0d13; font-weight: 800; font-size: var(--fs-xs); display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 6px 20px rgba(0,0,0,.35); }
 .panel { position: fixed; z-index: 130; top: 0; bottom: 0; right: 0; width: min(420px, 100%); background: #0e0f15; border-left: 1px solid var(--page-line); overflow-y: auto; padding: max(20px, env(safe-area-inset-top, 0px)) 22px 40px; transform: translateX(105%); transition: transform .35s var(--ease); }
 .panel.open { transform: none; box-shadow: -30px 0 80px rgba(0,0,0,.5); }
 .panel .closepanel { position: absolute; right: 16px; top: max(16px, env(safe-area-inset-top, 0px)); }
@@ -811,6 +811,70 @@ body { overflow: hidden; }
 .league { padding: 16px; display: flex; flex-direction: column; gap: 6px; background: linear-gradient(160deg, #1d1a10, var(--surface) 60%); }
 .league .kicker { font-size: var(--fs-2xs); font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
 @media (min-width: 900px) { .pts2 { font-size: 120px; } .pside { min-height: 240px; } }
+
+
+/* marketing homepage */
+.home { position: absolute; inset: 0; z-index: 110; overflow-y: auto; overflow-x: hidden; background: #0a0a0f; color: var(--ink); scrollbar-width: none; }
+.home::-webkit-scrollbar { display: none; }
+.hnav { position: sticky; top: 0; z-index: 20; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: max(12px, env(safe-area-inset-top, 0px)) 20px 12px; background: rgba(10,10,15,.72); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-bottom: 1px solid var(--line); }
+.hbrand { display: flex; align-items: center; gap: 10px; font-family: var(--display); font-weight: 900; font-size: 24px; text-transform: uppercase; }
+.hlinks { display: none; gap: 22px; }
+.hlinks button { font-weight: 700; font-size: var(--fs-sm); color: var(--muted); }
+.hlinks button:hover { color: var(--ink); }
+.hhero { position: relative; isolation: isolate; overflow: hidden; display: grid; grid-template-columns: minmax(0, 1fr); align-items: end; min-height: 620px; padding: 60px 20px 34px; }
+.hhero > .bandvid { z-index: -2; }
+.hhero::after { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(180deg, rgba(10,10,15,.25), rgba(10,10,15,.6) 45%, #0a0a0f 95%), linear-gradient(90deg, rgba(10,10,15,.7), transparent 75%); }
+.htitle { font-family: var(--display); font-weight: 900; text-transform: uppercase; font-size: clamp(54px, 14vw, 128px); line-height: .86; margin: 0; text-wrap: balance; }
+.htitle em { font-style: normal; color: var(--primary); }
+.rotline { display: inline-block; white-space: nowrap; min-height: .86em; }
+.rot { display: inline-block; color: var(--gold); }
+.rot.in { animation: rotin .45s var(--ease); }
+@keyframes rotin { from { transform: translateY(40%); opacity: 0; } }
+.hcards { position: relative; display: none; }
+.hsec { padding: 54px 20px; max-width: 1280px; margin: 0 auto; }
+.hh2 { font-family: var(--display); font-weight: 900; text-transform: uppercase; font-size: clamp(40px, 9vw, 80px); line-height: .9; margin: 8px 0 14px; text-wrap: balance; }
+.hlede { color: var(--muted); font-size: var(--fs-base); line-height: 1.5; max-width: 56ch; margin: 0 0 20px; }
+.hlive { display: grid; grid-template-columns: minmax(0, 1fr); gap: 10px; }
+.hl { position: relative; overflow: hidden; display: flex; flex-direction: column; gap: 8px; padding: 16px 16px 16px 22px; border-radius: 20px; background: var(--surface); border: 1px solid var(--line); text-align: left; }
+.hl::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 6px; background: linear-gradient(var(--c1) 50%, var(--c2) 50%); }
+.hl b { font-family: var(--display); font-weight: 900; text-transform: uppercase; font-size: 28px; line-height: .95; }
+.hgo { color: var(--primary); font-weight: 800; font-size: var(--fs-sm); display: inline-flex; align-items: center; gap: 6px; }
+.hgo .ic { width: 16px; height: 16px; }
+.hgroups { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; }
+.hg { position: relative; overflow: hidden; isolation: isolate; border-radius: 24px; min-height: 260px; display: flex; align-items: flex-end; }
+.hg .bandvid { z-index: -2; }
+.hg::after { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(180deg, transparent 20%, rgba(10,10,15,.88)); }
+.hgin { padding: 18px; display: flex; flex-direction: column; gap: 8px; align-items: flex-start; }
+.hgq { font-family: var(--display); font-weight: 900; text-transform: uppercase; font-size: 32px; line-height: .92; }
+.hgd { color: #d8d6e3; font-size: var(--fs-sm); line-height: 1.4; }
+.hmoment { max-width: none; background: radial-gradient(120% 80% at 80% 0%, #ff8a6b, #ff6b4a 50%, #d9502f); color: #1a0905; }
+.hmgrid { max-width: 1180px; margin: 0 auto; display: grid; grid-template-columns: minmax(0, 1fr); gap: 30px; align-items: center; }
+.hmoment .scard { box-shadow: 0 30px 70px rgba(26,9,5,.35); transform: rotate(-3deg); background: #0c0d13; color: var(--ink); }
+.hmoment .scard .pk { color: var(--muted); } .hmoment .scard h3 { color: var(--primary); }
+.hfeat { display: grid; grid-template-columns: minmax(0, 1fr); gap: 10px; }
+.hf { display: flex; flex-direction: column; gap: 8px; padding: 18px; border-radius: 20px; background: var(--surface); border: 1px solid var(--line); text-align: left; }
+.hf .ibox { background: var(--primary-soft); color: var(--primary); }
+.hf b { font-size: 17px; }
+.hf span:last-child { color: var(--muted); font-size: var(--fs-sm); line-height: 1.45; }
+.htrust { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 18px 14px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: 26px 0; }
+.htrust div { display: flex; flex-direction: column; gap: 4px; }
+.htrust b { font-family: var(--display); font-weight: 900; text-transform: uppercase; font-size: 22px; }
+.htrust span { color: var(--muted); font-size: var(--fs-sm); line-height: 1.4; }
+@media (max-width: 899px) { .hide-sm { display: none; } }
+@media (min-width: 900px) {
+  .hlinks { display: flex; }
+  .hnav { padding: 16px 64px; }
+  .hhero { min-height: calc(100vh - 70px); max-height: 900px; grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr); align-items: center; padding: 60px 64px; gap: 40px; }
+  .hcards { display: block; height: 470px; }
+  .hcards .jcard { width: 330px; }
+  .hsec { padding: 90px 64px; }
+  .hlive { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .hgroups { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .hg { min-height: 420px; }
+  .hmgrid { grid-template-columns: 1.2fr .8fr; padding: 0 64px; }
+  .hfeat { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .htrust { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
 
 /* your call + confirmation */
 .lnote { text-transform: none; letter-spacing: 0; font-weight: 600; color: var(--faint); font-size: var(--fs-xs); }
@@ -1129,7 +1193,7 @@ let S = {
   group: 'hall', reacts: { r1: { '🔥': 3, '😂': 1, '🫡': 0 }, r2: { '🔥': 0, '😂': 4, '🫡': 2 } }, mine: {},
   night: { pick: null, sets: '2-0', logged: 0, sport: 'Padel' }, match: newMatch('Padel', ['you', 'noa'], ['dev', 'sam']), matchNo: 1, playTab: 'score', resyOpen: false,
   duels: [{ vs: 'maya', call: 'Pistons or Knicks tonight?', mine: 'Knicks', theirs: 'Pistons', when: 'tonight ~10:30 PM', st: 'open' }, { vs: 'leo', call: 'Survivor: does anyone play an idol?', mine: 'Yes', theirs: 'No', when: 'Wed ~9:00 PM', st: 'open' }, { vs: 'sam', call: 'Celtics or Nets?', mine: 'Celtics', theirs: 'Nets', st: 'won' }], moment: false, toast: null, feedOff: {},
-  view: 'join', invite: 'surv', signup: false, confirm: null, joined: 2, share: null, answer: null, answerOpen: false, topic: 'all', interests: new Set(['viral', 'charts', 'nba', 'cbb', 'wcbb', 'nfl', 'survivor', 'traitors', 'dwts', 'housewives', 'snl', 'awards', 'baby', 'holidays', 'weddings', 'dinner']), rosters: {}, alerts: {}, onb: null, lock: false, story: false, create: null
+  view: 'home', invite: 'surv', signup: false, confirm: null, joined: 2, share: null, answer: null, answerOpen: false, topic: 'all', interests: new Set(['viral', 'charts', 'nba', 'cbb', 'wcbb', 'nfl', 'survivor', 'traitors', 'dwts', 'housewives', 'snl', 'awards', 'baby', 'holidays', 'weddings', 'dinner']), rosters: {}, alerts: {}, onb: null, lock: false, story: false, create: null
 };
 
 /* ===== views ===== */
@@ -1598,6 +1662,98 @@ function shareView() {
     <div class="foot"><button class="btn block" data-a="sendshare">${Sh.target === 'copy' ? 'Copy link' : 'Send with ' + t[1]}</button></div>
   </div>`;
 }
+/* ===== marketing homepage (the showcase for call-it.app) ===== */
+const ROT_WORDS = ['game', 'finale', 'upset', 'rose', 'turkey', 'baby', 'blindside', 'speech'];
+function homeLive() {
+  const nba = FEED.filter(e => ['NBA', 'NHL', 'CBB', 'WCBB'].includes(e.lg) && e.st !== 'post' && Date.parse(e.t) > now() - 3 * 3600e3).sort((a, b) => (b.st === 'in') - (a.st === 'in') || Date.parse(a.t) - Date.parse(b.t)).slice(0, 4)
+    .map(e => ({ id: e.id, kind: e.st === 'in' ? 'Live' : (LGNAME[e.lg] || e.lg), t: e.t, q: `${e.aw.rk ? '#' + e.aw.rk + ' ' : ''}${e.aw.n} or ${e.h.rk ? '#' + e.h.rk + ' ' : ''}${e.h.n}?`, sub: e.st === 'in' ? `${e.aw.s}–${e.h.s} · ${e.d}` : `${dayName(e.t)} ${fmtT(e.t)}`, c1: e.aw.c, c2: e.h.c, live: e.st === 'in' }));
+  const tv = TV.filter(x => tvState(x) !== 'aired').sort((a, b) => Date.parse(a.t) - Date.parse(b.t)).slice(0, 2)
+    .map(x => ({ id: x.id, kind: x.net, t: x.t, q: `${x.n}: ${(TVK[x.show] || TVK.def)[0].t.replace(/\?$/, '')}?`, sub: `${dayName(x.t)} ${fmtT(x.t)}`, c1: SHOWS[x.show].c, c2: SHOWS[x.show].c }));
+  return [...nba, ...tv];
+}
+function homeView() {
+  const live = homeLive(); const lead = live[0];
+  const tr = TRENDS[0]; const ch = CHARTS[0];
+  const groups = [
+    ['sports', 'sport-dunk', 'Game nights', 'Dorm floors, fantasy leagues, the group that watches every game.', 'Pistons or Knicks tonight?', 'hall'],
+    ['tv', 'tv-watch', 'Watch parties', 'Survivor, The Traitors, Dancing with the Stars, award nights.', 'Who gets voted out?', 'surv'],
+    ['life', 'life-table', 'Family', 'Thanksgiving, the baby pool, Sunday dinners. A gentle table.', 'Turkey on the table by 4?', 'fam'],
+    ['friends', 'social-night', 'Friends', 'Dinners, weddings, trips, the group chat\'s best arguments.', 'Is Sam 20 minutes late?', 'dinner']];
+  return `<div class="home">
+    <header class="hnav"><div class="hbrand">${coin(30)}CallIt</div>
+      <nav class="hlinks"><button data-a="hscroll" data-v="how">How it works</button><button data-a="hscroll" data-v="groups">For every group</button><button data-a="hscroll" data-v="tonight">Tonight</button></nav>
+      <div class="row" style="gap:8px"><button class="btn sm ghost hide-sm" data-a="homeapp">Open the app</button><button class="btn sm" data-a="homestart">Start a group</button></div></header>
+
+    <section class="hhero">
+      ${bgVideo('hero,sport-dunk,tv-watch,life-friends-table,social-night', 'dim')}
+      <div class="hcopy">
+        <div class="jkicker" style="--ja:var(--gold)">Private group predictions</div>
+        <h1 class="htitle">Call the<br><span class="rotline"><span class="rot" id="rotword">${ROT_WORDS[0]}</span>.</span><br><em>We remember</em> who called it.</h1>
+        <p class="jsub">Your group makes a call before it happens. Everyone locks in a pick, picks stay hidden until it starts, and when the result lands, the whole group sees who saw it coming. Free, private, and no money, ever.</p>
+        <div class="jcta"><button class="btn" data-a="homestart">Start a group</button><button class="btn gbtn" data-a="hscroll" data-v="tonight">See tonight's calls</button></div>
+        <div class="jfacts"><span>${I.check}Works in your browser</span><span>${I.check}Friends join from a link</span><span>${I.check}Nods are bragging rights</span></div>
+      </div>
+      <div class="hcards">
+        ${lead ? `<div class="jcard" style="top:0;left:0;--r:-2deg"><div class="row between"><span class="chip ${lead.live ? 'live' : ''}">${lead.live ? '<span class="dot"></span>' : ''}${lead.kind}</span><span class="muted num" style="font-size:var(--fs-xs)">${lead.sub}</span></div><div class="q">${lead.q}</div>${lead.live ? '' : timeline(lead.t, 150)}</div>` : ''}
+        <div class="jcard coral" style="top:230px;right:0;animation-delay:-2s;--r:4deg"><div class="row between"><span class="eyebrow" style="color:inherit;opacity:.7">Hall 4B · last night</span><span class="coin" style="width:40px;height:40px">${COIN}</span></div><div class="q">Maya called it.</div><div style="font-weight:700;font-size:var(--fs-sm)">Only 3 of 6 did. The table remembers.</div></div>
+      </div>
+    </section>
+
+    <section class="hsec" id="h-tonight">
+      <div class="lg">Real events, right now</div><h2 class="hh2">Tonight's calls</h2>
+      <p class="hlede">Games and shows come in from a live feed, so there's always something to call. Tap one to make it your group's.</p>
+      <div class="hlive">${live.map(e => `<button class="hl press" data-a="homecall" data-v="${e.id}" style="--c1:${e.c1};--c2:${e.c2}"><span class="lg">${e.kind}</span><b>${e.q}</b><span class="muted num" style="font-size:var(--fs-xs)">${e.live ? `<span class="chip live" style="height:22px"><span class="dot"></span>${e.sub}</span>` : `${e.sub} · locks in <span data-until="${e.t}">${until(e.t)}</span>`}</span><span class="hgo">Call it ${I.arrow}</span></button>`).join('')}</div>
+    </section>
+
+    <section class="hsec" id="h-how">
+      <div class="lg">How it works</div><h2 class="hh2">Three taps. A group that remembers.</h2>
+      <div class="steps3">
+        <div class="step3"><span class="n">1</span><b>Call it</b><p>Pick a game, a show or a moment. The question and what counts are written out before anyone answers.</p></div>
+        <div class="step3"><span class="n">2</span><b>Lock it</b><p>Everyone picks once. Picks stay hidden until it starts, so nobody copies and nobody changes their mind.</p></div>
+        <div class="step3"><span class="n">3</span><b>Called it</b><p>The result lands, the group sees who saw it coming, and the Nod goes on the table for the season.</p></div>
+      </div>
+    </section>
+
+    <section class="hsec" id="h-groups">
+      <div class="lg">For every group</div><h2 class="hh2">Not just for sports guys.</h2>
+      <div class="hgroups">${groups.map(([th, vid, t, d, q, inv]) => `<div class="hg">${bgVideo(vid, 'dim')}<div class="hgin"><span class="lg" style="color:#fff;opacity:.8">${t}</span><b class="hgq">${(INV(inv).call && INV(inv).call.q) || q}</b><span class="hgd">${d}</span><button class="btn sm" data-a="homeinvite" data-v="${inv}">See an invite ${I.arrow}</button></div></div>`).join('')}</div>
+    </section>
+
+    <section class="hsec hmoment">
+      <div class="hmgrid">
+        <div><div class="lg" style="color:#1a0905;opacity:.7">The best part</div><h2 class="hh2" style="color:#1a0905">You called it.</h2>
+          <p class="hlede" style="color:#3a1408">Confetti, the receipt with the time you locked in, the jump on the table, and a story card for Instagram or TikTok that never shows anyone else's pick.</p>
+          <button class="btn" style="background:#1a0905;color:var(--primary)" data-a="homemoment">Feel it</button></div>
+        <div class="scard" style="margin:0 auto"><div class="row between"><span class="pk">Hall 4B · Oct 27</span><span class="coinbig">${COIN}</span></div><div><h3 class="disp">Called<br>it.</h3></div><div style="display:flex;flex-direction:column;gap:8px"><span class="qq">Nets or Celtics tonight?</span><span class="pickpill">Celtics · locked in 6:12 PM</span><span class="pk">Final 112–104 · 3 of 6 got it</span></div><div class="row between"><span class="pk">CallIt</span><span class="pk">call-it.app</span></div></div>
+      </div>
+    </section>
+
+    <section class="hsec">
+      <div class="lg">More ways to play</div><h2 class="hh2">The whole night, not just the pick.</h2>
+      <div class="hfeat">
+        ${[['racket', 'Live scorer', 'Padel, tennis, ping pong or pickup. Tap the point, and the match settles its own calls.', 'play'],
+           ['people', 'Duels and leagues', 'Take the other side against one friend, or put your floor against the next one.', 'play'],
+           ['globe', 'Going viral', tr ? `Most read on Wikipedia yesterday: ${tr.title}. Call where it goes next.` : 'Wikipedia trends, the music chart, a friend\'s post.', 'trends'],
+           ['list', 'The chart', ch ? `#1 right now: "${ch.title}" by ${ch.artist}. Does it hold?` : 'Call next week\'s #1.', 'trends'],
+           ['bell', 'The countdown', 'Every shared call shows when picks lock and when the result lands, in the chat and on the page.', 'share'],
+           ['fork', 'Dinner plans', 'Paste a Resy or OpenTable link and the call fills itself: who\'s late, who arrives last.', 'apps']].map(([ic, t, d, go]) => `<button class="hf press" data-a="homego" data-v="${go}"><span class="ibox">${I[ic]}</span><b>${t}</b><span>${d}</span></button>`).join('')}
+      </div>
+    </section>
+
+    <section class="hsec">
+      <div class="htrust">${[['No money, ever', 'Nods are bragging rights. Nothing to buy and nothing to cash out. Just a score between friends.'], ['Picks stay hidden', 'Nobody sees a pick until the call closes. Not even the group\'s manager.'], ['Private groups', 'Only people with your group\'s link get in, and a manager can replace it.'], ['Free, in your browser', 'Add it to your home screen. No app store, no download.']].map(([t, d]) => `<div><b>${t}</b><span>${d}</span></div>`).join('')}</div>
+    </section>
+
+    <section class="thesis"><div class="bg">${bgVideo('social-dance,tv-horror', 'dim')}</div>
+      <blockquote>Being right is better when your group remembers.</blockquote>
+      <div class="jcta" style="justify-content:center;margin-top:26px"><button class="btn" data-a="homestart">Start a group</button><button class="btn gbtn" data-a="homeapp">Open the app</button></div></section>
+
+    <footer class="jfoot">CallIt is private group predictions for friends, families and watch parties. No money changes hands.<br>Live data: ESPN scoreboards, TVmaze, Wikimedia, Deezer, Open-Meteo. Film: Pexels and Mixkit.<br>Prototype for review. People and groups shown are sample data.</footer>
+    <div class="jdock"><button class="btn" data-a="homestart">Start a group</button></div>
+  </div>`;
+}
+setInterval(() => { const el = document.getElementById('rotword'); if (!el || matchMedia('(prefers-reduced-motion: reduce)').matches) return; const i = (ROT_WORDS.indexOf(el.textContent) + 1) % ROT_WORDS.length; el.classList.remove('in'); void el.offsetWidth; el.textContent = ROT_WORDS[i]; el.classList.add('in'); }, 2200);
+
 /* ===== invites: the join page is built from the group and the call it was sent for ===== */
 const evAt = (id, fb) => FEED.find(e => e.id === id) || fb;
 function INV(id) {
@@ -1679,7 +1835,7 @@ function joinView() {
   return `<div class="join theme-${V.theme}" style="--ja:${{ tv: '#ff7ad9', life: '#ffb38a', sports: '#ff6b4a' }[V.theme]}">
     <header class="jhero">
       ${joinBg(V)}
-      <div class="jbrand">${coin(30)}CallIt</div>
+      <button class="jbrand" data-a="gohome">${coin(30)}CallIt</button>
       <div class="jcopy">
         <div class="invitee">${av(V.from)}${P[V.from][0]} invited you</div>
         <div class="jkicker">${V.kicker}</div>
@@ -2084,12 +2240,14 @@ function render() {
   const over = { stack: stackView, quick: quickSheet, slate: slateView, detail: detailView, create: createView, share: shareView }[S.sheet]?.() || '';
   const scrim = ['stack', 'slate', 'detail', 'create'].includes(S.sheet) ? '<div class="scrim deskonly" data-a="close"></div>' : '';
   const vt = {}; app.querySelectorAll('video').forEach(v => { vt[v.getAttribute('src') || v.currentSrc] = v.currentTime; });
-  app.innerHTML = `${S.view === 'join' ? joinView() + (S.signup ? signupView() : '') : ''}<div class="scroll">${body}</div>${nav()}${scrim}${over}${S.moment ? momentView() : ''}${S.story ? storyView() : ''}${S.onb ? onboardView() : ''}${S.lock ? lockView() : ''}${S.confirm ? confirmView() : ''}${S.answerOpen ? answerView() : ''}${S.toast ? `<div class="toast">${coin()}<span>${S.toast.t}</span>${S.toast.undo ? '<button data-a="undo">Undo</button>' : ''}</div>` : ''}`;
+  const hs = app.querySelector('.home, .join'); const hkeep = hs ? [hs.className.split(' ')[0], hs.scrollTop] : null;
+  app.innerHTML = `${S.view === 'home' ? homeView() : ''}${S.view === 'join' ? joinView() + (S.signup ? signupView() : '') : ''}<div class="scroll">${body}</div>${nav()}${scrim}${over}${S.moment ? momentView() : ''}${S.story ? storyView() : ''}${S.onb ? onboardView() : ''}${S.lock ? lockView() : ''}${S.confirm ? confirmView() : ''}${S.answerOpen ? answerView() : ''}${S.toast ? `<div class="toast">${coin()}<span>${S.toast.t}</span>${S.toast.undo ? '<button data-a="undo">Undo</button>' : ''}</div>` : ''}`;
   const nsc = app.querySelector(':scope > .scroll'); if (nsc && !S.reset) nsc.scrollTop = keep; S.reset = false;
   if (same && S.sheet) { const o = app.querySelector('.bottom .inner, .sheet .scroll'); if (o) o.scrollTop = okeep; app.querySelectorAll('.bottom, .sheet, .scrim').forEach(x => x.style.animation = 'none'); }
   if (S.onb && sameOnb) { const o = app.querySelector('.onb .scroll'); if (o) o.scrollTop = onbkeep; app.querySelector('.onb').style.animation = 'none'; }
   if (S.moment && S._momentShown) app.querySelectorAll('.moment, .moment *').forEach(x => x.style.animation = 'none');
   S._momentShown = !!S.moment;
+  if (hkeep) { const h = app.querySelector('.' + hkeep[0]); if (h) h.scrollTop = hkeep[1]; }
   S._last = S.sheet; S._lastOnb = S.onb && S.onb.step;
   app.querySelectorAll('video').forEach(v => { const t = vt[v.getAttribute('src')]; if (t) { try { v.currentTime = t; } catch (_) {} } });
   if (focus === 'rosterin' || focus === 'gname') { const f = document.getElementById(focus); if (f) { f.focus(); const v = f.value; f.setSelectionRange?.(v.length, v.length); } }
@@ -2179,6 +2337,14 @@ const ACT = {
   apick: v => { S.answer.pick = +v; render(); },
   asave: () => { S.answer.name = (document.getElementById('aname') || {}).value || ''; S.answer.saved = true; render(); },
   answerjoin: () => { S.invite = S.answer.group || S.invite; S.answerOpen = false; S.sheet = null; S.view = 'join'; render(); },
+  gohome: () => { S.view = 'home'; S.sheet = null; S.signup = false; render(); },
+  homestart: () => { S.view = 'app'; ACT.onboard(); },
+  homeapp: () => { S.view = 'app'; S.sheet = null; ACT.tab('foryou'); },
+  homeinvite: v => ACT.invite(v),
+  homecall: v => { S.view = 'app'; S.tab = 'foryou'; ACT.quick(v); },
+  homemoment: () => { S.view = 'app'; S.tab = 'foryou'; S.moment = 'called'; render(); },
+  homego: v => { S.view = 'app'; if (v === 'play') ACT.tab('play'); else if (v === 'trends') ACT.topictrends(); else if (v === 'share') { S.tab = 'groups'; S.group = 'surv'; ACT.share('surv'); } else { ACT.tab('me'); S.resyOpen = true; render(); } },
+  hscroll: v => { const h = document.querySelector('.home'); const t = document.getElementById('h-' + v); if (!h || !t) return; const top = t.offsetTop - (h.querySelector('.hnav')?.offsetHeight || 0); h.scrollTo({ top, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' }); setTimeout(() => { if (Math.abs(h.scrollTop - top) > 4) h.scrollTop = top; }, 900); },
   invite: v => { S.invite = v; S.view = 'join'; S.sheet = null; S.signup = false; S.answerOpen = false; render(); const j = document.querySelector('.join'); if (j) j.scrollTop = 0; },
   joinstart: () => { S.signup = true; render(); },
   closesignup: () => { S.signup = false; render(); },
@@ -2297,12 +2463,13 @@ setInterval(() => {
 setInterval(() => { const c = document.getElementById('clock'); if (c) c.textContent = new Date(now()).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZone: TZ }).replace(/ [AP]M/, ''); }, 1000);
 
 /* review panel */
-document.getElementById('jump').innerHTML = [['inv-surv', 'Invite: Survivor Wed'], ['inv-hall', 'Invite: Hall 4B'], ['inv-fam', 'Invite: Family'], ['inv-lions', 'Invite: Lions Den'], ['inv-dinner', 'Invite: Dinner crew'], ['answer', 'Answer from a chat'], ['share', 'Invite 5 and share'], ['onboard', 'Welcome and interests'], ['foryou', 'For you feed'], ['tv', 'TV call'], ['lifepool', 'Baby pool'], ['quick', 'Two-tap game call'], ['custom', 'Custom rules'], ['stack', 'Swipe to answer'], ['detail', 'Live game'], ['called', 'You called it'], ['missed', 'Not this time'], ['create', 'New group'], ['lock', 'Alerts'], ['slate', 'Sunday slate'], ['groups', 'Group'], ['play', 'Play: live scorer'], ['trends', 'Trends and posts'], ['apps', 'Connected apps'], ['me', 'Profile']].map(([v, l]) => `<button data-v="${v}">${l}</button>`).join('');
+document.getElementById('jump').innerHTML = [['home', 'Marketing homepage'], ['inv-surv', 'Invite: Survivor Wed'], ['inv-hall', 'Invite: Hall 4B'], ['inv-fam', 'Invite: Family'], ['inv-lions', 'Invite: Lions Den'], ['inv-dinner', 'Invite: Dinner crew'], ['answer', 'Answer from a chat'], ['share', 'Invite 5 and share'], ['onboard', 'Welcome and interests'], ['foryou', 'For you feed'], ['tv', 'TV call'], ['lifepool', 'Baby pool'], ['quick', 'Two-tap game call'], ['custom', 'Custom rules'], ['stack', 'Swipe to answer'], ['detail', 'Live game'], ['called', 'You called it'], ['missed', 'Not this time'], ['create', 'New group'], ['lock', 'Alerts'], ['slate', 'Sunday slate'], ['groups', 'Group'], ['play', 'Play: live scorer'], ['trends', 'Trends and posts'], ['apps', 'Connected apps'], ['me', 'Profile']].map(([v, l]) => `<button data-v="${v}">${l}</button>`).join('');
 document.getElementById('jump').addEventListener('click', e => {
   const b = e.target.closest('button'); if (!b) return; const v = b.dataset.v; S.moment = false; S.toast = null;
   const nba = () => (FEED.find(x => x.lg === 'NBA' && x.st !== 'post') || FEED[0]).id;
   if (v.startsWith('inv-')) { S.onb = null; S.lock = false; S.confirm = null; S.moment = false; ACT.invite(v.slice(4)); document.getElementById('panel').classList.remove('open'); return; }
-  S.onb = null; S.lock = false; S.story = false; S.answerOpen = false; S.signup = false; S.view = v === 'join' ? 'join' : 'app';
+  S.onb = null; S.lock = false; S.story = false; S.answerOpen = false; S.signup = false; S.view = v === 'join' ? 'join' : v === 'home' ? 'home' : 'app';
+  if (v === 'home') { S.sheet = null; S.moment = false; S.confirm = null; render(); document.getElementById('panel').classList.remove('open'); return; }
   if (v === 'join') { S.sheet = null; render(); } else if (v === 'answer') { S.tab = 'foryou'; S.sheet = null; ACT.answerpage(0); } else if (v === 'share') { S.tab = 'groups'; S.group = 'surv'; ACT.share('surv'); } else
   if (['foryou', 'groups', 'night', 'play', 'me'].includes(v)) ACT.tab(v);
   else if (v === 'trends') ACT.topictrends(); else if (v === 'apps') { ACT.tab('me'); setTimeout(() => { const h = [...document.querySelectorAll('#app h2')].find(x => /Connected apps/i.test(x.textContent)); h && h.scrollIntoView({ block: 'start' }); }, 50); }
