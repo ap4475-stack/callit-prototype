@@ -387,7 +387,7 @@ section.block { display: flex; flex-direction: column; gap: 10px; margin-top: 26
 .country { display: flex; align-items: center; gap: 14px; padding: 14px 16px; border-radius: 18px; background: var(--surface); border: 1.5px solid var(--line); width: 100%; margin-bottom: 8px; font-weight: 700; font-size: 16px; }
 .country .fl { font-size: 28px; line-height: 1; }
 .country.on { border-color: var(--primary); background: var(--primary-soft); }
-.country[disabled] { opacity: .5; }
+.country.soon { opacity: .55; }
 .igroup { margin-bottom: 18px; }
 .igroup h4 { margin: 0 0 9px; font-size: var(--fs-2xs); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
 .cloud { display: flex; flex-wrap: wrap; gap: 7px; }
@@ -936,6 +936,12 @@ body { overflow: hidden; }
 </div>
 
 <script>
+/* landing-page film and photos are served from call-it.app instead of a second copy in the repo;
+   where outside requests are blocked (the claude.ai viewer), a published copy under media/ answers instead */
+const LANDING_MEDIA = /^(hero\.mp4|hero-poster\.jpg|couch-phone\.jpg)$/;
+const MEDIA = f => (LANDING_MEDIA.test(f) ? 'https://call-it.app/media/' : 'media/') + f;
+document.addEventListener('error', e => { const el = e.target; const src = el && el.getAttribute && el.getAttribute('src');
+  if (src && src.startsWith('https://call-it.app/media/')) { el.setAttribute('src', 'media/' + src.split('/').pop()); if (el.tagName === 'SOURCE') el.parentElement.load(); } }, true);
 /* ===== real fixtures: ESPN public scoreboard, pulled 2026-10-27 16:55 New York ===== */
 const SNAPSHOT = [{"id":"401909877","lg":"NBA","t":"2026-10-27T23:30Z","st":"pre","d":"10/27 - 7:30 PM EDT","h":{"a":"BOS","n":"Celtics","c":"#008348","s":"0"},"aw":{"a":"BKN","n":"Nets","c":"#000000","s":"0"}},{"id":"401909878","lg":"NBA","t":"2026-10-28T00:00Z","st":"pre","d":"10/27 - 8:00 PM EDT","h":{"a":"NY","n":"Knicks","c":"#1d428a","s":"0"},"aw":{"a":"DET","n":"Pistons","c":"#1d428a","s":"0"}},{"id":"401909879","lg":"NBA","t":"2026-10-28T00:00Z","st":"pre","d":"10/27 - 8:00 PM EDT","h":{"a":"SA","n":"Spurs","c":"#000000","s":"0"},"aw":{"a":"SAC","n":"Kings","c":"#5a2d81","s":"0"}},{"id":"401909880","lg":"NBA","t":"2026-10-28T03:00Z","st":"pre","d":"10/27 - 11:00 PM EDT","h":{"a":"LAL","n":"Lakers","c":"#552583","s":"0"},"aw":{"a":"POR","n":"Trail Blazers","c":"#e03a3e","s":"0"}},{"id":"401892585","lg":"NHL","t":"2026-10-27T23:00Z","st":"pre","d":"10/27 - 7:00 PM EDT","h":{"a":"PHI","n":"Flyers","c":"#fe5823","s":"0"},"aw":{"a":"CBJ","n":"Blue Jackets","c":"#002d62","s":"0"}},{"id":"401892586","lg":"NHL","t":"2026-10-28T00:00Z","st":"pre","d":"10/27 - 8:00 PM EDT","h":{"a":"CAR","n":"Hurricanes","c":"#e30426","s":"0"},"aw":{"a":"BOS","n":"Bruins","c":"#231f20","s":"0"}},{"id":"401892587","lg":"NHL","t":"2026-10-28T00:00Z","st":"pre","d":"10/27 - 8:00 PM EDT","h":{"a":"CHI","n":"Blackhawks","c":"#e31937","s":"0"},"aw":{"a":"LA","n":"Kings","c":"#121212","s":"0"}},{"id":"401892588","lg":"NHL","t":"2026-10-28T00:00Z","st":"pre","d":"10/27 - 8:00 PM EDT","h":{"a":"STL","n":"Blues","c":"#0070b9","s":"0"},"aw":{"a":"MTL","n":"Canadiens","c":"#c41230","s":"0"}},{"id":"401892589","lg":"NHL","t":"2026-10-28T00:00Z","st":"pre","d":"10/27 - 8:00 PM EDT","h":{"a":"NSH","n":"Predators","c":"#fdba31","s":"0"},"aw":{"a":"NYI","n":"Islanders","c":"#00529b","s":"0"}},{"id":"401892590","lg":"NHL","t":"2026-10-28T00:00Z","st":"pre","d":"10/27 - 8:00 PM EDT","h":{"a":"DAL","n":"Stars","c":"#20864c","s":"0"},"aw":{"a":"NJ","n":"Devils","c":"#e30b2b","s":"0"}},{"id":"401873026","lg":"NFL","t":"2026-11-01T18:00Z","st":"pre","d":"11/1 - 1:00 PM EST","h":{"a":"BUF","n":"Bills","c":"#00338d","s":"0"},"aw":{"a":"BAL","n":"Ravens","c":"#29126f","s":"0"}},{"id":"401873031","lg":"NFL","t":"2026-11-01T18:00Z","st":"pre","d":"11/1 - 1:00 PM EST","h":{"a":"CIN","n":"Bengals","c":"#fb4f14","s":"0"},"aw":{"a":"TEN","n":"Titans","c":"#4495d2","s":"0"}},{"id":"401873024","lg":"NFL","t":"2026-11-01T18:00Z","st":"pre","d":"11/1 - 1:00 PM EST","h":{"a":"DAL","n":"Cowboys","c":"#002a5c","s":"0"},"aw":{"a":"ARI","n":"Cardinals","c":"#a40227","s":"0"}},{"id":"401873030","lg":"NFL","t":"2026-11-01T18:00Z","st":"pre","d":"11/1 - 1:00 PM EST","h":{"a":"DET","n":"Lions","c":"#0076b6","s":"0"},"aw":{"a":"MIN","n":"Vikings","c":"#4f2683","s":"0"}},{"id":"401873029","lg":"NFL","t":"2026-11-01T18:00Z","st":"pre","d":"11/1 - 1:00 PM EST","h":{"a":"NYJ","n":"Jets","c":"#115740","s":"0"},"aw":{"a":"LV","n":"Raiders","c":"#000000","s":"0"}},{"id":"401873027","lg":"NFL","t":"2026-11-01T18:00Z","st":"pre","d":"11/1 - 1:00 PM EST","h":{"a":"PIT","n":"Steelers","c":"#000000","s":"0"},"aw":{"a":"CLE","n":"Browns","c":"#472a08","s":"0"}},{"id":"401873025","lg":"NFL","t":"2026-11-01T18:00Z","st":"pre","d":"11/1 - 1:00 PM EST","h":{"a":"TB","n":"Buccaneers","c":"#bd1c36","s":"0"},"aw":{"a":"ATL","n":"Falcons","c":"#a71930","s":"0"}},{"id":"401873028","lg":"NFL","t":"2026-11-01T18:00Z","st":"pre","d":"11/1 - 1:00 PM EST","h":{"a":"JAX","n":"Jaguars","c":"#007487","s":"0"},"aw":{"a":"IND","n":"Colts","c":"#003b75","s":"0"}},{"id":"401873032","lg":"NFL","t":"2026-11-01T21:05Z","st":"pre","d":"11/1 - 4:05 PM EST","h":{"a":"LAR","n":"Rams","c":"#003594","s":"0"},"aw":{"a":"LAC","n":"Chargers","c":"#0080c6","s":"0"}},{"id":"401873033","lg":"NFL","t":"2026-11-01T21:25Z","st":"pre","d":"11/1 - 4:25 PM EST","h":{"a":"DEN","n":"Broncos","c":"#0a2343","s":"0"},"aw":{"a":"KC","n":"Chiefs","c":"#e31837","s":"0"}},{"id":"401873034","lg":"NFL","t":"2026-11-01T21:25Z","st":"pre","d":"11/1 - 4:25 PM EST","h":{"a":"MIA","n":"Dolphins","c":"#008e97","s":"0"},"aw":{"a":"NE","n":"Patriots","c":"#002a5c","s":"0"}},{"id":"401873035","lg":"NFL","t":"2026-11-02T01:20Z","st":"pre","d":"11/1 - 8:20 PM EST","h":{"a":"WSH","n":"Commanders","c":"#5a1414","s":"0"},"aw":{"a":"PHI","n":"Eagles","c":"#06424d","s":"0"}},{"id":"401879248","lg":"EPL","t":"2026-10-31T12:30Z","st":"pre","d":"Scheduled","h":{"a":"CHE","n":"Chelsea","c":"#144992","s":"0"},"aw":{"a":"MAN","n":"Man Utd","c":"#da020e","s":"0"}},{"id":"401879251","lg":"EPL","t":"2026-10-31T15:00Z","st":"pre","d":"Scheduled","h":{"a":"BOU","n":"Bournemouth","c":"#f42727","s":"0"},"aw":{"a":"LEE","n":"Leeds","c":"#ffffff","s":"0"}},{"id":"401879249","lg":"EPL","t":"2026-10-31T15:00Z","st":"pre","d":"Scheduled","h":{"a":"BRE","n":"Brentford","c":"#f42727","s":"0"},"aw":{"a":"NFO","n":"Nottm Forest","c":"#c8102e","s":"0"}},{"id":"401879247","lg":"EPL","t":"2026-10-31T15:00Z","st":"pre","d":"Scheduled","h":{"a":"COV","n":"Coventry","c":"#87cced","s":"0"},"aw":{"a":"SUN","n":"Sunderland","c":"#EB172B","s":"0"}},{"id":"401878763","lg":"EPL","t":"2026-10-31T15:00Z","st":"pre","d":"Scheduled","h":{"a":"HUL","n":"Hull","c":"#f28800","s":"0"},"aw":{"a":"IPS","n":"Ipswich","c":"#0000fa","s":"0"}},{"id":"401879245","lg":"EPL","t":"2026-10-31T15:00Z","st":"pre","d":"Scheduled","h":{"a":"MNC","n":"Man City","c":"#99c5ea","s":"0"},"aw":{"a":"BHA","n":"Brighton","c":"#0606fa","s":"0"}},{"id":"401878761","lg":"EPL","t":"2026-10-31T17:30Z","st":"pre","d":"Scheduled","h":{"a":"TOT","n":"Spurs","c":"#ffffff","s":"0"},"aw":{"a":"CRY","n":"C Palace","c":"#0202fb","s":"0"}},{"id":"401879250","lg":"EPL","t":"2026-10-31T20:00Z","st":"pre","d":"Scheduled","h":{"a":"AVL","n":"Aston Villa","c":"#660e36","s":"0"},"aw":{"a":"FUL","n":"Fulham","c":"#ffffff","s":"0"}},{"id":"401879246","lg":"EPL","t":"2026-11-01T16:30Z","st":"pre","d":"Scheduled","h":{"a":"LIV","n":"Liverpool","c":"#d11317","s":"0"},"aw":{"a":"ARS","n":"Arsenal","c":"#e20520","s":"0"}}];
 let SNAP_AT = Date.parse('2026-10-27T20:55:00Z');
@@ -1026,6 +1032,11 @@ const KINDS = {
     { id: 'tb', t: 'Any tiebreak?', ic: 'tie', q: () => 'Will there be a tiebreak?', a: () => ['Yes', 'No'], c: 'Any set that reaches 6–6.' }
   ]
 };
+// world events and friends' own calls: the question and answers come from the event itself
+KINDS.LIFE = [
+  { id: 'pick', t: 'Pick one', ic: 'flag', q: e => e.q || 'Type your question', a: () => ['Yes', 'No'], c: 'Settled by the official result or announcement.' },
+  { id: 'closest', t: 'Closest number', ic: 'target', how: 'number', q: e => e.q || 'Type your question', a: () => ['Type a number'], c: 'Closest to the real number wins.' }
+];
 KINDS.WCBB = KINDS.CBB.map(k => k.id === 'total' ? { ...k, q: () => 'More or less than 135 points?', a: () => ['More than 135', '135 or less'] } : k);
 const HOW = [['pick', 'Pick one'], ['number', 'Closest number'], ['rank', 'Rank them']];
 const CLOSES = [['start', 'At start'], ['half', 'At halftime'], ['custom', 'Pick a time']];
@@ -1235,8 +1246,8 @@ const catScore = cat => [...S.interests].filter(id => ICAT[id] === cat).length;
 
 /* ===== round 8: background film, real connections, play (live scorer, duels, leagues) ===== */
 const posterOf = n => n === 'hero' ? 'hero-poster' : n;
-const bgVideo = (list, cls = '') => { const n = list.split(','); return `<video class="bandvid ${cls}" autoplay muted playsinline ${n.length > 1 ? `data-playlist="${list}" data-i="0"` : 'loop'} poster="media/${posterOf(n[0])}.jpg" aria-hidden="true" src="media/${n[0]}.mp4"></video>`; };
-document.addEventListener('ended', e => { const v = e.target; if (!v.dataset || !v.dataset.playlist) return; const l = v.dataset.playlist.split(','); const i = (+v.dataset.i + 1) % l.length; v.dataset.i = i; v.poster = `media/${posterOf(l[i])}.jpg`; v.src = `media/${l[i]}.mp4`; v.play().catch(() => {}); }, true);
+const bgVideo = (list, cls = '') => { const n = list.split(','); return `<video class="bandvid ${cls}" autoplay muted playsinline ${n.length > 1 ? `data-playlist="${list}" data-i="0"` : 'loop'} poster="${MEDIA(posterOf(n[0]) + '.jpg')}" aria-hidden="true" src="${MEDIA(n[0] + '.mp4')}"></video>`; };
+document.addEventListener('ended', e => { const v = e.target; if (!v.dataset || !v.dataset.playlist) return; const l = v.dataset.playlist.split(','); const i = (+v.dataset.i + 1) % l.length; v.dataset.i = i; v.poster = MEDIA(posterOf(l[i]) + '.jpg'); v.src = MEDIA(l[i] + '.mp4'); v.play().catch(() => {}); }, true);
 
 let TRENDS = [], CHARTS = [], WX = null;
 
@@ -1638,8 +1649,8 @@ function INV(id) {
 }
 function joinBg(V) {
   if (V.theme === 'tv') return `<div class="jbg tv" style="--sc:${V.sc}"><div class="beam b1"></div><div class="beam b2"></div><div class="scan"></div><span class="jmono">${V.g.name}</span></div>`;
-  if (V.theme === 'life') return `<div class="jbg life"><img src="media/couch-phone.jpg" alt="">${[['#ffb38a', 220, 8, 18], ['#ff8fc7', 140, 72, 30], ['#ffd36e', 90, 45, 62], ['#ff6b4a', 170, 88, 70], ['#c7b8ff', 110, 20, 75]].map(([c, s, x, y], i) => `<i class="bokeh" style="background:${c};width:${s}px;height:${s}px;left:${x}%;top:${y}%;animation-delay:-${i * 3}s"></i>`).join('')}</div>`;
-  return `<video autoplay muted loop playsinline poster="media/hero-poster.jpg" aria-hidden="true"><source src="media/hero.mp4" type="video/mp4"></video>`;
+  if (V.theme === 'life') return `<div class="jbg life"><img src="${MEDIA('couch-phone.jpg')}" alt="">${[['#ffb38a', 220, 8, 18], ['#ff8fc7', 140, 72, 30], ['#ffd36e', 90, 45, 62], ['#ff6b4a', 170, 88, 70], ['#c7b8ff', 110, 20, 75]].map(([c, s, x, y], i) => `<i class="bokeh" style="background:${c};width:${s}px;height:${s}px;left:${x}%;top:${y}%;animation-delay:-${i * 3}s"></i>`).join('')}</div>`;
+  return `<video autoplay muted loop playsinline poster="${MEDIA('hero-poster.jpg')}" aria-hidden="true"><source src="${MEDIA('hero.mp4')}" type="video/mp4"></video>`;
 }
 function joinCards(inline) {
   const V = INV(S.invite); if (!V.call) return '';
@@ -1690,7 +1701,7 @@ function joinView() {
       </div>
     </section>
 
-    <section class="thesis"><div class="bg"><img src="media/${V.theme === 'sports' ? 'hero-poster.jpg' : 'couch-phone.jpg'}" alt=""></div>
+    <section class="thesis"><div class="bg"><img src="${MEDIA(V.theme === 'sports' ? 'hero-poster.jpg' : 'couch-phone.jpg')}" alt=""></div>
       <blockquote>Being right is better when your group remembers.</blockquote>
       <cite>The CallIt idea, in one line</cite></section>
 
@@ -1706,7 +1717,7 @@ function joinView() {
 function signupView() {
   const V = INV(S.invite);
   const others = V.g.people.filter(p => p !== 'you').slice(0, 4);
-  return `<div class="signup" data-a="closesignup"><form class="sbox" id="signupform" onclick="event.stopPropagation()">
+  return `<div class="signup" data-a="closesignup"><form class="sbox" id="signupform">
     <div class="grab"></div>
     <div class="row">${avs(others)}<span class="muted" style="font-size:var(--fs-sm)">${others.map(p => P[p][0]).join(', ').replace(/, ([^,]*)$/, ' and $1')} ${others.length > 1 ? 'are' : 'is'} in</span></div>
     <h3 class="disp">Join ${V.g.name}</h3>
@@ -1740,7 +1751,7 @@ function answerView() {
 
 /* quick call: the two-tap sheet */
 function quickSheet() {
-  const Q = S.quick; const e = Q.ev; const kinds = e.kinds || (e.tv ? (TVK[e.show] || TVK.def) : KINDS[Q.sport]); const k = kinds.find(x => x.id === Q.kind) || kinds[0];
+  const Q = S.quick; const e = Q.ev; const kinds = e.kinds || (e.tv ? (TVK[e.show] || TVK.def) : KINDS[Q.sport] || KINDS.LIFE); const k = kinds.find(x => x.id === Q.kind) || kinds[0];
   const g = G(Q.group); const r = Q.rules;
   const roster = k.roster ? (S.rosters[e.show] || []) : null;
   const answers = roster || (k.members ? g.people.map(p => P[p][0]) : (Q.answers || k.a(e)));
@@ -1909,13 +1920,13 @@ function momentView() {
 }
 function storyView() {
   return `<div class="story" data-a="closestory">
-    <div class="scard" onclick="event.stopPropagation()">
+    <div class="scard">
       <div class="row between"><span class="pk">Hall 4B · Oct 27</span><span class="coinbig">${COIN}</span></div>
       <div><h3 class="disp">Called<br>it.</h3></div>
       <div style="display:flex;flex-direction:column;gap:8px"><span class="qq">Nets or Celtics tonight?</span><span class="pickpill">Celtics · locked in 6:12 PM</span><span class="pk">Final 112–104 · 3 of 6 got it</span></div>
       <div class="row between"><span class="pk">CallIt</span><span class="pk">call-it.app</span></div>
     </div>
-    <div class="shareto" onclick="event.stopPropagation()">${[['📸', 'Instagram'], ['🎵', 'TikTok'], ['💬', 'Messages'], ['⬇️', 'Save']].map(([e, l]) => `<button data-a="shareto" data-v="${l}"><span class="si">${e}</span>${l}</button>`).join('')}</div>
+    <div class="shareto">${[['📸', 'Instagram'], ['🎵', 'TikTok'], ['💬', 'Messages'], ['⬇️', 'Save']].map(([e, l]) => `<button data-a="shareto" data-v="${l}"><span class="si">${e}</span>${l}</button>`).join('')}</div>
     <span class="muted" style="font-size:var(--fs-xs)">Picks from other people never appear on a shared card.</span>
   </div>`;
 }
@@ -1935,7 +1946,7 @@ function onboardView() {
   let body = '', foot = '';
   if (O.step === 0) {
     body = `<h2 class="disp">Where are you calling from?</h2><p class="lead">Games, shows and events come from your country's calendar. More countries are on the way.</p>
-      ${COUNTRIES.map(([c, f, n, ok]) => `<button class="country ${O.country === c ? 'on' : ''}" data-a="country" data-v="${c}" ${ok ? '' : 'disabled'}><span class="fl">${f}</span><span class="grow">${n}</span>${ok ? (O.country === c ? `<span style="color:var(--primary)">${I.check}</span>` : '') : '<span class="chip demo">Soon</span>'}</button>`).join('')}`;
+      ${COUNTRIES.map(([c, f, n, ok]) => `<button class="country ${O.country === c ? 'on' : ''} ${ok ? '' : 'soon'}" data-a="country" data-v="${c}"><span class="fl">${f}</span><span class="grow">${n}</span>${ok ? (O.country === c ? `<span style="color:var(--primary)">${I.check}</span>` : '') : '<span class="chip demo">Soon</span>'}</button>`).join('')}`;
     foot = `<button class="btn block" data-a="onbnext">Continue</button>`;
   } else if (O.step === 1) {
     const n = O.picks.size;
@@ -2089,13 +2100,13 @@ function toast(t, undo) { S.toast = { t, undo }; render(); clearTimeout(toast.h)
 function openQuick(ev, opts = {}) {
   const sport = ev.tv ? 'TV' : ev.world || ev.life ? 'LIFE' : ev.match ? 'MATCH' : (KINDS[ev.lg] ? ev.lg : 'NBA');
   const group = opts.group || ev.group || (ev.lg === 'NFL' ? 'lions' : ev.match ? 'padel' : ev.tv ? 'surv' : S.lastGroup);
-  const kinds = ev.kinds || (ev.tv ? (TVK[ev.show] || TVK.def) : KINDS[sport] || KINDS.NBA);
+  const kinds = ev.kinds || (ev.tv ? (TVK[ev.show] || TVK.def) : KINDS[sport] || KINDS.LIFE);
   S.quick = { ev, sport, kind: opts.kind || kinds[0].id, group, rules: { ...G(group).rules }, custom: false, save: false, q: opts.q || null, answers: opts.answers || null, mine: null };
   const k = kinds.find(x => x.id === S.quick.kind); if (k && k.how === 'number') S.quick.rules.how = 'number';
   S.sheet = 'quick'; render();
 }
 function finishSignup() { const th = INV(S.invite).theme; S.signup = false; S.view = 'app'; S.tab = 'foryou'; S.onb = { step: 1, country: 'US', picks: new Set({ tv: ['survivor', 'traitors', 'awards'], sports: ['nba', 'cbb', 'nfl'], life: ['holidays', 'baby', 'dinner'] }[th]), joining: true }; render(); }
-const qKinds = () => { const e = S.quick.ev; return e.kinds || (e.tv ? (TVK[e.show] || TVK.def) : KINDS[S.quick.sport] || KINDS.NBA); };
+const qKinds = () => { const e = S.quick.ev; return e.kinds || (e.tv ? (TVK[e.show] || TVK.def) : KINDS[S.quick.sport] || KINDS.LIFE); };
 const MATCH_EV = { match: true, aw: { a: 'A·N', n: 'Aviv & Noa', c: '#2f6f6b' }, h: { a: 'D·S', n: 'Dev & Sam', c: '#8a4a2a' } };
 const FRIENDS = {
   fantasy: { group: 'lions', ic: 'list', kindLabel: 'Fantasy week', q: 'Who tops the Lions Den in week 9?', a: ['Dev', 'Sam', 'Leo', 'Aviv'], when: 'Week 9 · Sun to Mon', counts: 'Highest points in the Lions Den fantasy league, Monday night final.' },
@@ -2221,7 +2232,7 @@ const ACT = {
   cdone: () => { const id = S.newId; S.sheet = null; S.create = null; S.lastGroup = id; ACT.group(id); },
   onboard: () => { S.onb = { step: 0, country: 'US', picks: new Set() }; render(); },
   editinterests: () => { S.onb = { step: 1, country: 'US', picks: new Set(S.interests), edit: true }; render(); },
-  country: v => { S.onb.country = v; render(); },
+  country: v => { const c = COUNTRIES.find(x => x[0] === v); if (!c[3]) return toast(`CallIt starts in the US. We'll let you know when ${c[2]} opens.`); S.onb.country = v; render(); },
   pick: v => { const p = S.onb.picks; p.has(v) ? p.delete(v) : p.add(v); render(); },
   onbnext: () => { if (S.onb.step === 1) { S.interests = new Set(S.onb.picks); if (S.onb.edit || S.onb.joining) return ACT.onbdone(); } S.onb.step++; render(); },
   onbback: () => { S.onb.step--; render(); },
@@ -2262,6 +2273,8 @@ function bindSwipe() {
 const phone = document.getElementById('phone');
 phone.addEventListener('click', e => {
   const b = e.target.closest('[data-a]'); if (!b || b.isContentEditable) return;
+  // tapping inside a card or form on an overlay must not close it; only the backdrop itself closes
+  if ((b.classList.contains('story') || b.classList.contains('signup')) && e.target !== b) return;
   const f = ACT[b.dataset.a]; if (f) { e.preventDefault(); e.stopPropagation(); f(b.dataset.v); }
 });
 phone.addEventListener('input', e => { if (e.target.id === 'qtext' && S.quick) S.quick.q = e.target.textContent; if (e.target.id === 'gname' && S.create) { S.create.name = e.target.value; const b = phone.querySelector('[data-a="cnext"]'); if (b) { b.disabled = !e.target.value.trim(); b.textContent = 'Create ' + (e.target.value.trim() || 'group'); } } });
@@ -2305,7 +2318,7 @@ document.getElementById('notesbtn').addEventListener('click', () => panelEl.clas
 document.getElementById('closepanel').addEventListener('click', () => panelEl.classList.remove('open'));
 async function loadFeed() {
   try {
-    const r = await fetch('feed.json', { cache: 'no-store' }); if (!r.ok) return;
+    let r = await fetch('feed.json', { cache: 'no-store' }).catch(() => null); if (!r || !r.ok) r = await fetch('feed.sample.json', { cache: 'no-store' }).catch(() => null); if (!r || !r.ok) return;
     const f = await r.json(); if (!f.generated_at || !Array.isArray(f.sports)) return;
     SNAP_AT = Date.parse(f.generated_at); FEEDSTATE.file = true;
     if (f.sports.length) FEED = f.sports.map(e => ({ ...e }));
