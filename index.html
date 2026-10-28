@@ -1601,7 +1601,9 @@ function shareView() {
 /* ===== invites: the join page is built from the group and the call it was sent for ===== */
 const evAt = (id, fb) => FEED.find(e => e.id === id) || fb;
 function INV(id) {
-  const g = G(id) || G('surv'); const sv = SURV(); const ny = evAt('401909878', { t: '2026-10-28T00:00Z' });
+  const g = G(id) || G('surv'); const sv = SURV();
+  // the Hall 4B invite always shows the next NBA game that hasn't started, so the timeline never reads "over"
+  const ny = FEED.filter(e => e.lg === 'NBA' && e.st === 'pre' && Date.parse(e.t) > now()).sort((a, b) => Date.parse(a.t) - Date.parse(b.t))[0] || evAt('401909878', { t: '2026-10-28T00:00Z' });
   const nfl = FEED.find(e => e.lg === 'NFL' && e.st === 'pre') || { t: '2026-11-01T18:00Z', aw: { n: 'Ravens' }, h: { n: 'Bills' } };
   const tvAt = show => TV.find(x => x.show === show);
   const at = t => t ? `${dayName(t)} ${fmtT(t)}` : '';
@@ -1614,10 +1616,10 @@ function INV(id) {
       next: [[tvAt('survivor'), 'Who gets voted out?'], [tvAt('traitors'), 'Is a Traitor banished?'], [{ n: 'CMA Awards', net: 'ABC', t: '2026-11-19T01:00:00Z' }, 'How many does Ella Langley win?']] },
     hall: { theme: 'sports', from: 'leo', kicker: 'Game nights · NBA and college hoops',
       sub: 'Six people on one floor, calling every game on the lounge TV. Pick before tip-off, watch it together, and the table remembers who knew.',
-      call: { q: `${ny.aw?.n || 'Pistons'} or ${ny.h?.n || 'Knicks'} tonight?`, a: [ny.aw?.n || 'Pistons', ny.h?.n || 'Knicks'], counts: 'The final score, overtime included, per the feed.', t: ny.t, rt: 150, by: ['maya', 'leo', 'sam'] },
+      call: { q: `${ny.aw?.n || 'Pistons'} or ${ny.h?.n || 'Knicks'} ${dayName(ny.t) === 'Tonight' ? 'tonight' : new Date(ny.t).toLocaleDateString('en-US', { weekday: 'long', timeZone: TZ })}?`, a: [ny.aw?.n || 'Pistons', ny.h?.n || 'Knicks'], counts: 'The final score, overtime included, per the feed.', t: ny.t, rt: 150, by: ['maya', 'leo', 'sam'] },
       won: ['Last night · Celtics vs Nets', 'Maya called it.', 'Celtics by 8. Only 3 of 6 got it, and Leo still hasn\'t recovered.'],
       table: [['maya', '+6'], ['leo', '+1'], ['sam', '−2']],
-      next: [[{ n: 'Knicks vs Pistons', net: 'NBA', t: ny.t }, 'Who wins tonight?'], [{ n: '#14 Miami vs #1 Florida', net: 'NCAA men', t: '2026-11-02T23:00:00Z' }, 'Upset on opening night?'], [{ n: '#20 Maryland at #1 South Carolina', net: 'NCAA women', t: '2026-11-02T17:00:00Z' }, 'Does South Carolina lose?']] },
+      next: [[{ n: `${ny.aw?.n || 'Pistons'} at ${ny.h?.n || 'Knicks'}`, net: 'NBA', t: ny.t }, `Who wins ${dayName(ny.t) === 'Tonight' ? 'tonight' : 'on ' + new Date(ny.t).toLocaleDateString('en-US', { weekday: 'long', timeZone: TZ })}?`], [{ n: '#14 Miami vs #1 Florida', net: 'NCAA men', t: '2026-11-02T23:00:00Z' }, 'Upset on opening night?'], [{ n: '#20 Maryland at #1 South Carolina', net: 'NCAA women', t: '2026-11-02T17:00:00Z' }, 'Does South Carolina lose?']] },
     lions: { theme: 'sports', from: 'dev', kicker: 'Pick\'em league · NFL week 9',
       sub: 'Four friends, one fantasy league, and a Sunday slate. Pick every game in under a minute. The season table settles the group chat arguments.',
       call: { q: `${nfl.aw.n} or ${nfl.h.n}?`, a: [nfl.aw.n, nfl.h.n], counts: 'Final score, overtime included.', t: nfl.t, rt: 195, by: ['dev', 'sam'] },
