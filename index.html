@@ -1675,10 +1675,10 @@ function homeView() {
   const live = homeLive(); const lead = live[0];
   const tr = TRENDS[0]; const ch = CHARTS[0];
   const groups = [
-    ['sports', 'sport-dunk', 'Game nights', 'Dorm floors, fantasy leagues, the group that watches every game.', 'Pistons or Knicks tonight?', 'hall'],
-    ['tv', 'tv-watch', 'Watch parties', 'Survivor, The Traitors, Dancing with the Stars, award nights.', 'Who gets voted out?', 'surv'],
-    ['life', 'life-table', 'Family', 'Thanksgiving, the baby pool, Sunday dinners. A gentle table.', 'Turkey on the table by 4?', 'fam'],
-    ['friends', 'social-night', 'Friends', 'Dinners, weddings, trips, the group chat\'s best arguments.', 'Is Sam 20 minutes late?', 'dinner']];
+    ['sports', 'sport-dunk', 'Game nights', 'Dorm floors and the friends who watch every game.', 'Pistons or Knicks tonight?', 'hall'],
+    ['tv', 'tv-watch', 'Watch parties', 'Survivor, The Traitors and award nights.', 'Who gets voted out?', 'surv'],
+    ['life', 'life-table', 'Family', 'Thanksgiving and Sunday dinners.', 'Turkey on the table by 4?', 'fam'],
+    ['friends', 'social-night', 'Friends', 'Dinners, trips and the group chat\'s best arguments.', 'Is Sam 20 minutes late?', 'dinner']];
   return `<div class="home">
     <header class="hnav"><div class="hbrand">${coin(30)}CallIt</div>
       <nav class="hlinks"><button data-a="hscroll" data-v="how">How it works</button><button data-a="hscroll" data-v="groups">For every group</button><button data-a="hscroll" data-v="tonight">Tonight</button></nav>
@@ -1687,11 +1687,11 @@ function homeView() {
     <section class="hhero">
       ${bgVideo('hero,sport-dunk,tv-watch,life-friends-table,social-night', 'dim')}
       <div class="hcopy">
-        <div class="jkicker" style="--ja:var(--gold)">Private group predictions</div>
+        <div class="jkicker" style="--ja:var(--gold)">Group predictions, no money</div>
         <h1 class="htitle">Call the<br><span class="rotline"><span class="rot" id="rotword">${ROT_WORDS[0]}</span>.</span><br><em>We remember</em> who called it.</h1>
-        <p class="jsub">Your group makes a call before it happens. Everyone locks in a pick, picks stay hidden until it starts, and when the result lands, the whole group sees who saw it coming. Free, private, and no money, ever.</p>
+        <p class="jsub">Everyone picks before it starts. Picks stay hidden. When it ends, the whole group sees who called it.</p>
         <div class="jcta"><button class="btn" data-a="homestart">Start a group</button><button class="btn gbtn" data-a="hscroll" data-v="tonight">See tonight's calls</button></div>
-        <div class="jfacts"><span>${I.check}Works in your browser</span><span>${I.check}Friends join from a link</span><span>${I.check}Nods are bragging rights</span></div>
+        <div class="jfacts"><span>${I.check}Free</span><span>${I.check}Join from a link</span><span>${I.check}No money, ever</span></div>
       </div>
       <div class="hcards">
         ${lead ? `<div class="jcard" style="top:0;left:0;--r:-2deg"><div class="row between"><span class="chip ${lead.live ? 'live' : ''}">${lead.live ? '<span class="dot"></span>' : ''}${lead.kind}</span><span class="muted num" style="font-size:var(--fs-xs)">${lead.sub}</span></div><div class="q">${lead.q}</div>${lead.live ? '' : timeline(lead.t, 150)}</div>` : ''}
@@ -1701,16 +1701,16 @@ function homeView() {
 
     <section class="hsec" id="h-tonight">
       <div class="lg">Real events, right now</div><h2 class="hh2">Tonight's calls</h2>
-      <p class="hlede">Games and shows come in from a live feed, so there's always something to call. Tap one to make it your group's.</p>
+      <p class="hlede">Real games and shows, pulled live. Tap one to start a call.</p>
       <div class="hlive">${live.map(e => `<button class="hl press" data-a="homecall" data-v="${e.id}" style="--c1:${e.c1};--c2:${e.c2}"><span class="lg">${e.kind}</span><b>${e.q}</b><span class="muted num" style="font-size:var(--fs-xs)">${e.live ? `<span class="chip live" style="height:22px"><span class="dot"></span>${e.sub}</span>` : `${e.sub} · locks in <span data-until="${e.t}">${until(e.t)}</span>`}</span><span class="hgo">Call it ${I.arrow}</span></button>`).join('')}</div>
     </section>
 
     <section class="hsec" id="h-how">
-      <div class="lg">How it works</div><h2 class="hh2">Three taps. A group that remembers.</h2>
+      <div class="lg">How it works</div><h2 class="hh2">Three taps. That's it.</h2>
       <div class="steps3">
-        <div class="step3"><span class="n">1</span><b>Call it</b><p>Pick a game, a show or a moment. The question and what counts are written out before anyone answers.</p></div>
-        <div class="step3"><span class="n">2</span><b>Lock it</b><p>Everyone picks once. Picks stay hidden until it starts, so nobody copies and nobody changes their mind.</p></div>
-        <div class="step3"><span class="n">3</span><b>Called it</b><p>The result lands, the group sees who saw it coming, and the Nod goes on the table for the season.</p></div>
+        <div class="step3"><span class="n">1</span><b>Call it</b><p>Pick a game, a show or a moment.</p></div>
+        <div class="step3"><span class="n">2</span><b>Lock it</b><p>Everyone picks once. Nobody sees the picks until it starts, so nobody copies.</p></div>
+        <div class="step3"><span class="n">3</span><b>Called it</b><p>The result comes in. Your group sees who got it right.</p></div>
       </div>
     </section>
 
@@ -1722,33 +1722,33 @@ function homeView() {
     <section class="hsec hmoment">
       <div class="hmgrid">
         <div><div class="lg" style="color:#1a0905;opacity:.7">The best part</div><h2 class="hh2" style="color:#1a0905">You called it.</h2>
-          <p class="hlede" style="color:#3a1408">Confetti, the receipt with the time you locked in, the jump on the table, and a story card for Instagram or TikTok that never shows anyone else's pick.</p>
+          <p class="hlede" style="color:#3a1408">Confetti, a jump on the table and a story card to post. It never shows anyone else's pick.</p>
           <button class="btn" style="background:#1a0905;color:var(--primary)" data-a="homemoment">Feel it</button></div>
         <div class="scard" style="margin:0 auto"><div class="row between"><span class="pk">Hall 4B · Oct 27</span><span class="coinbig">${COIN}</span></div><div><h3 class="disp">Called<br>it.</h3></div><div style="display:flex;flex-direction:column;gap:8px"><span class="qq">Nets or Celtics tonight?</span><span class="pickpill">Celtics · locked in 6:12 PM</span><span class="pk">Final 112–104 · 3 of 6 got it</span></div><div class="row between"><span class="pk">CallIt</span><span class="pk">call-it.app</span></div></div>
       </div>
     </section>
 
     <section class="hsec">
-      <div class="lg">More ways to play</div><h2 class="hh2">The whole night, not just the pick.</h2>
+      <div class="lg">Coming soon</div><h2 class="hh2">More ways to play.</h2>
       <div class="hfeat">
-        ${[['racket', 'Live scorer', 'Padel, tennis, ping pong or pickup. Tap the point, and the match settles its own calls.', 'play'],
-           ['people', 'Duels and leagues', 'Take the other side against one friend, or put your floor against the next one.', 'play'],
-           ['globe', 'Going viral', tr ? `Most read on Wikipedia yesterday: ${tr.title}. Call where it goes next.` : 'Wikipedia trends, the music chart, a friend\'s post.', 'trends'],
-           ['list', 'The chart', ch ? `#1 right now: "${ch.title}" by ${ch.artist}. Does it hold?` : 'Call next week\'s #1.', 'trends'],
-           ['bell', 'The countdown', 'Every shared call shows when picks lock and when the result lands, in the chat and on the page.', 'share'],
-           ['fork', 'Dinner plans', 'Paste a Resy or OpenTable link and the call fills itself: who\'s late, who arrives last.', 'apps']].map(([ic, t, d, go]) => `<button class="hf press" data-a="homego" data-v="${go}"><span class="ibox">${I[ic]}</span><b>${t}</b><span>${d}</span></button>`).join('')}
+        ${[['racket', 'Live scorer', 'Tap each point. The match settles its own calls.', 'play'],
+           ['people', 'Duels and leagues', 'Take on one friend, or your floor against the next.', 'play'],
+           ['globe', 'Going viral', tr ? `Wikipedia\'s top read: ${tr.title}. Where does it go?` : 'Call what\'s trending next.', 'trends'],
+           ['list', 'The chart', ch ? `"${ch.title}" is #1. Does it hold?` : 'Call next week\'s #1.', 'trends'],
+           ['bell', 'The countdown', 'Every shared call shows when picks lock.', 'share'],
+           ['fork', 'Dinner plans', 'Paste a Resy link. Who shows up last?', 'apps']].map(([ic, t, d, go]) => `<button class="hf press" data-a="homego" data-v="${go}"><span class="ibox">${I[ic]}</span><b>${t}</b><span>${d}</span></button>`).join('')}
       </div>
     </section>
 
     <section class="hsec">
-      <div class="htrust">${[['No money, ever', 'Nods are bragging rights. Nothing to buy and nothing to cash out. Just a score between friends.'], ['Picks stay hidden', 'Nobody sees a pick until the call closes. Not even the group\'s manager.'], ['Private groups', 'Only people with your group\'s link get in, and a manager can replace it.'], ['Free, in your browser', 'Add it to your home screen. No app store, no download.']].map(([t, d]) => `<div><b>${t}</b><span>${d}</span></div>`).join('')}</div>
+      <div class="htrust">${[['No money, ever', 'Nods are just points. Nothing to buy or cash out.'], ['Picks stay hidden', 'Nobody sees a pick until it locks. Not even the manager.'], ['Private groups', 'Only people with your link get in.'], ['Free, in your browser', 'No app store. Add it to your home screen.']].map(([t, d]) => `<div><b>${t}</b><span>${d}</span></div>`).join('')}</div>
     </section>
 
     <section class="thesis"><div class="bg">${bgVideo('social-dance,tv-horror', 'dim')}</div>
       <blockquote>Being right is better when your group remembers.</blockquote>
       <div class="jcta" style="justify-content:center;margin-top:26px"><button class="btn" data-a="homestart">Start a group</button><button class="btn gbtn" data-a="homeapp">Open the app</button></div></section>
 
-    <footer class="jfoot">CallIt is private group predictions for friends, families and watch parties. No money changes hands.<br>Live data: ESPN scoreboards, TVmaze, Wikimedia, Deezer, Open-Meteo. Film: Pexels and Mixkit.<br>Prototype for review. People and groups shown are sample data.</footer>
+    <footer class="jfoot">CallIt is a free prediction game for friends. No money changes hands.<br>Live data from ESPN, TVmaze, Wikimedia, Deezer and Open-Meteo. Film from Pexels and Mixkit.<br>Prototype. The people and groups are sample data.</footer>
     <div class="jdock"><button class="btn" data-a="homestart">Start a group</button></div>
   </div>`;
 }
@@ -1952,12 +1952,12 @@ function quickSheet() {
           <div class="rrow"><span>Closes</span>${seg('closes', e.tv ? [['start', 'At airtime'], ['half', 'Halfway'], ['custom', 'Pick a time']] : CLOSES)}</div>
           <div class="rrow"><span>Nods on this call</span>${seg('nods', [[1, '1 Nod'], [2, '2 Nods'], [3, '3 Nods']])}</div>
           <div class="rrow"><span>Who settles it</span>${seg('settle', e.tv || e.life ? [['manager', 'Manager decides'], ['vote', 'Group votes']] : SETTLE)}</div>
-          <div class="locked">${I.lock}<span>Picks stay hidden until it closes. That rule is the same everywhere.</span></div>
+          <div class="locked">${I.lock}<span>Picks stay hidden until it closes. Same rule everywhere.</span></div>
           <button class="check" data-a="savehouse"><span class="box ${Q.save ? 'on' : ''}">${Q.save ? I.check : ''}</span>Save as ${g.name} house rules</button>
         </div>` : ''}
       </div>
     </div>
-    <div class="foot"><div class="vis">${I.lock}<span>Only ${g.name} sees this · ${g.people.length} ${g.people.length === 1 ? 'person' : 'people'}${isMgr ? ' · you manage it, so it goes live now' : ` · ${P[mgr][0]} manages it and publishes your suggestion`}</span></div><button class="btn block" id="postbtn" data-a="post" ${needNames || myLabel === null ? 'disabled' : ''}>${postLabel}</button></div>
+    <div class="foot"><div class="vis">${I.lock}<span>Only ${g.name} sees this · ${g.people.length} ${g.people.length === 1 ? 'person' : 'people'}${isMgr ? '' : ` · ${P[mgr][0]} approves it`}</span></div><button class="btn block" id="postbtn" data-a="post" ${needNames || myLabel === null ? 'disabled' : ''}>${postLabel}</button></div>
   </div>`;
 }
 
@@ -2103,16 +2103,16 @@ function onboardView() {
   const O = S.onb; const steps = `<div class="steps">${[0, 1, 2].map(i => `<i class="${i <= O.step ? 'done' : ''}"></i>`).join('')}</div>`;
   let body = '', foot = '';
   if (O.step === 0) {
-    body = `<h2 class="disp">Where are you calling from?</h2><p class="lead">Games, shows and events come from your country's calendar. More countries are on the way.</p>
+    body = `<h2 class="disp">Where are you calling from?</h2><p class="lead">Your games and shows come from here. More countries soon.</p>
       ${COUNTRIES.map(([c, f, n, ok]) => `<button class="country ${O.country === c ? 'on' : ''} ${ok ? '' : 'soon'}" data-a="country" data-v="${c}"><span class="fl">${f}</span><span class="grow">${n}</span>${ok ? (O.country === c ? `<span style="color:var(--primary)">${I.check}</span>` : '') : '<span class="chip demo">Soon</span>'}</button>`).join('')}`;
     foot = `<button class="btn block" data-a="onbnext">Continue</button>`;
   } else if (O.step === 1) {
     const n = O.picks.size;
-    body = `<h2 class="disp">What do you love?</h2><p class="lead">Pick at least 3. Your feed fills with calls about these, and you can change them anytime.</p>
+    body = `<h2 class="disp">What do you love?</h2><p class="lead">Pick 3 or more. You can change them later.</p>
       ${INTERESTS.map(([h, , items]) => `<div class="igroup"><h4>${h}</h4><div class="cloud">${items.map(([id, e, l]) => `<button class="interest ${O.picks.has(id) ? 'on' : ''}" data-a="pick" data-v="${id}"><span class="e">${e}</span>${l}</button>`).join('')}</div></div>`).join('')}`;
     foot = `<div class="counter"><span><b>${n}</b> picked</span><span>${n < 3 ? `${3 - n} more to go` : 'Looking good'}</span></div><button class="btn block" data-a="onbnext" ${n < 3 ? 'disabled' : ''}>Show me my feed</button>`;
   } else {
-    body = `<h2 class="disp">Who do you call with?</h2><p class="lead">CallIt is better with your people. Start a group, or open the link a friend sent you.</p>
+    body = `<h2 class="disp">Who do you call with?</h2><p class="lead">Start a group or open a friend's link.</p>
       <div class="tmpls">${TEMPLATES.slice(0, 6).map(([id, em, t, s]) => `<button class="tmpl" data-a="onbgroup" data-v="${id}"><span class="em">${em}</span><b>${t}</b><small>${s}</small></button>`).join('')}</div>
       <button class="country" data-a="onbjoin" style="margin-top:12px"><span class="fl">🔗</span><span class="grow">I have an invitation link</span>${I.arrow}</button>`;
     foot = `<button class="btn ghost block" data-a="onbdone">Skip for now</button>`;
@@ -2130,7 +2130,7 @@ function createView() {
   const C = S.create; const t = TEMPLATES.find(x => x[0] === C.tmpl);
   let body = '', foot = '';
   if (C.step === 0) {
-    body = `<h2 class="disp" style="font-size:46px;margin:6px 0 6px">New group</h2><p class="muted" style="margin:0 0 16px">What kind of group is it? This sets its house rules. You can change them later.</p>
+    body = `<h2 class="disp" style="font-size:46px;margin:6px 0 6px">New group</h2><p class="muted" style="margin:0 0 16px">What kind of group? It sets the rules. You can change them later.</p>
       <div class="tmpls">${TEMPLATES.map(([id, em, tt, s]) => `<button class="tmpl ${C.tmpl === id ? 'on' : ''}" data-a="ctmpl" data-v="${id}"><span class="em">${em}</span><b>${tt}</b><small>${s}</small></button>`).join('')}</div>`;
     foot = `<button class="btn block" data-a="cnext">Continue</button>`;
   } else if (C.step === 1) {
