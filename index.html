@@ -826,7 +826,7 @@ body { overflow: hidden; }
 .hhero::after { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(180deg, rgba(10,10,15,.25), rgba(10,10,15,.6) 45%, #0a0a0f 95%), linear-gradient(90deg, rgba(10,10,15,.7), transparent 75%); }
 .htitle { font-family: var(--display); font-weight: 900; text-transform: uppercase; font-size: clamp(54px, 14vw, 128px); line-height: .86; margin: 0; text-wrap: balance; }
 .htitle em { font-style: normal; color: var(--primary); }
-.rotline { display: inline-block; white-space: nowrap; min-height: .86em; }
+.rotline { display: inline-block; white-space: nowrap; min-height: .86em; overflow: hidden; vertical-align: bottom; padding-bottom: .04em; }
 .rot { display: inline-block; color: var(--gold); }
 .rot.in { animation: rotin .45s var(--ease); }
 @keyframes rotin { from { transform: translateY(40%); opacity: 0; } }
