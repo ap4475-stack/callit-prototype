@@ -5,6 +5,7 @@ window.__e2e = { done: false }; (async () => {
   const click = async (a, v, wait = 80) => { const el = [...document.querySelectorAll('#app [data-a]')].find(e => e.dataset.a === a && (v === undefined || e.dataset.v === String(v))); if (!el) { res.push(['click', `${a}|${v} not on screen`, false]); return false; } el.click(); await sleep(wait); return true; };
   const reset = () => { S.view = 'app'; S.sheet = null; S.moment = false; S.story = false; S.lock = false; S.onb = null; S.confirm = null; S.answerOpen = false; S.signup = false; S.toast = null; S.tab = 'foryou'; S.topic = 'all'; render(); };
 
+  LS.set('user', null); LS.set('history', null); S.user = null; S.history = [];
   // 0. marketing homepage -> tonight's call, invite preview, start a group
   S.view = 'home'; render(); await sleep(60); ok('home', 'homepage renders with tonight\'s calls', document.querySelector('.home') && document.querySelectorAll('.hl').length > 0);
   { const id = document.querySelector('.hl').dataset.v; await click('homecall', id); ok('home', 'a tonight call opens the call sheet in the app', S.view === 'app' && S.sheet === 'quick'); }
@@ -24,7 +25,8 @@ window.__e2e = { done: false }; (async () => {
   await click('onbnext'); ok('join', 'lands on feed with joined toast', S.view === 'app' && S.tab === 'foryou' && /joined Hall 4B/.test(S.toast?.t || ''));
 
   // 2. make a call -> your call -> confirm -> share -> answer link -> join page
-  reset(); await click('newcall'); ok('call', 'call sheet opens', S.sheet === 'quick');
+  reset(); await click('compose'); ok('call', 'big Call it button opens the composer', S.sheet === 'compose');
+  document.querySelector('[data-a="sug"][data-v^="quick:"]').click(); await sleep(80); ok('call', 'a suggestion opens the call sheet', S.sheet === 'quick');
   ok('call', 'post disabled before your pick', document.getElementById('postbtn').disabled);
   await click('mypick', 0); ok('call', 'post enabled after your pick', !document.getElementById('postbtn').disabled);
   await click('post'); ok('call', 'confirmation shows your call', S.confirm && document.querySelector('.yourcard'));
@@ -44,12 +46,12 @@ window.__e2e = { done: false }; (async () => {
   reset(); ACT.detail('demo'); await sleep(80); await click('demofinal'); ok('live', 'final shows suggested result', document.querySelector('.suggest'));
   await click('confirm'); ok('live', 'You called it moment', S.moment === 'called');
   await click('story'); ok('live', 'story card opens', S.story);
-  await click('shareto', 'Instagram'); ok('live', 'share closes story with toast', !S.story && /Instagram/.test(S.toast?.t || ''));
+  { const ck = HTMLAnchorElement.prototype.click; HTMLAnchorElement.prototype.click = function () { if (!this.download) ck.call(this); }; await click('shareto', 'Instagram', 1600); HTMLAnchorElement.prototype.click = ck; } ok('live', 'share closes story with toast', !S.story && /Instagram/.test(S.toast?.t || ''));
   await click('closemoment'); ok('live', 'moment closes to feed', !S.moment && S.tab === 'foryou');
 
   // 5. create a group -> invite
-  reset(); await click('newgroup'); await click('ctmpl', 'family'); await click('cnext'); ok('group', 'name step with a default name', S.create.step === 1 && S.create.name);
-  await click('cnext'); ok('group', 'invite step', S.create.step === 2 && document.querySelector('.qr'));
+  reset(); await click('newgroup'); await click('ctmpl', 'family'); ok('group', 'one screen: name, who it is for, rules', S.create.step === 0 && document.getElementById('gname'));
+  await click('cnext'); ok('group', 'Create and invite uses a default name and shows the link', S.create.step === 2 && S.create.name === 'The Cohens' && document.querySelector('.qr'));
   const newId = S.newId; await click('cdone'); ok('group', 'lands on the new group', S.tab === 'groups' && S.group === newId);
 
   // 6. live scorer: a full padel match
@@ -71,6 +73,28 @@ window.__e2e = { done: false }; (async () => {
   ACT.tab('me'); await sleep(60); await click('resy'); document.getElementById('resylink').value = 'https://resy.com/cities/ny/via-carota?date=2026-10-30&seats=5'; await click('resyparse');
   ok('apps', 'Resy link fills a dinner call', S.sheet === 'quick' && /Via Carota/i.test(document.querySelector('.evhead').textContent));
   await click('mypick', 0); await click('post'); ok('apps', 'Resy call posts as a suggestion to the manager', S.confirm && S.confirm.suggest);
+  // 9. composer, history, real share links, deep links, saved login
+  reset(); await click('compose'); const cq = () => document.getElementById('cq');
+  cq().value = 'sam'; cq().dispatchEvent(new Event('input', { bubbles: true })); await sleep(60);
+  ok('compose', 'typing filters suggestions', [...document.querySelectorAll('[data-a="sug"] .ttl')].some(e => /Sam/.test(e.textContent)) && document.querySelector('.ownrow'));
+  cq().value = 'Will it snow Friday'; cq().dispatchEvent(new Event('input', { bubbles: true })); await sleep(60);
+  await click('sug', 'own:'); ok('compose', 'your own words become a call', S.sheet === 'quick' && /Will it snow Friday\?/.test(document.getElementById('qtext').textContent));
+  await click('mypick', 0); await click('post'); ok('compose', 'the call is remembered on this device', S.history[0]?.q === 'Will it snow Friday?' && LS.get('history')[0].q === 'Will it snow Friday?');
+  reset(); await click('compose'); ok('compose', 'it comes back under Call it again', /Will it snow Friday/.test(document.querySelector('.bottom').textContent)); await click('close');
+  { const opened = []; const wo = window.open; window.open = u => { opened.push(u); return {}; };
+    ACT.share('hall'); await sleep(40); await click('target', 'whatsapp'); await click('sendshare');
+    ok('share', 'WhatsApp opens wa.me with the answer links', /^https:\/\/wa\.me\/\?text=/.test(opened[0] || '') && decodeURIComponent(opened[0]).includes('#c-hall-0'));
+    ACT.share('hall'); await sleep(40); await click('target', 'telegram'); await click('sendshare');
+    ok('share', 'Telegram opens its share page', /^https:\/\/t\.me\/share\/url\?url=/.test(opened[1] || ''));
+    ACT.newgroup(); await click('cnext'); await click('cshare', 'whatsapp'); ok('share', 'new group invite opens WhatsApp with a join link', decodeURIComponent(opened[2] || '').includes('#join-dinner'));
+    window.open = wo; reset(); }
+  location.hash = 'c-hall-1'; await sleep(120); ok('links', 'an answer link opens that answer', S.answerOpen && S.answer.pick === 1 && S.answer.group === 'hall');
+  location.hash = 'join-fam'; await sleep(120); ok('links', 'a join link opens that group\'s invite', S.view === 'join' && S.invite === 'fam' && !S.answerOpen);
+  history.replaceState(null, '', location.pathname); reset();
+  ok('account', 'sign-up is saved on this device', S.user && LS.get('user')?.username === S.user.username);
+  S.view = 'join'; S.invite = 'surv'; render(); await click('joinstart'); ok('account', 'a signed-in person joins without the form', S.view === 'app' && !S.signup);
+  ACT.tab('me'); await sleep(40); await click('logout'); ok('account', 'sign out clears the saved login', !S.user && LS.get('user') === null);
+  LS.set('history', null); S.history = [];
   reset();
   window.__e2e = { done: true, passed: res.filter(r => r[2]).length, failed: res.filter(r => !r[2]), errs };
 })(); 'started';

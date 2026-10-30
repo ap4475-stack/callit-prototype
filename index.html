@@ -101,6 +101,22 @@ section.block { display: flex; flex-direction: column; gap: 10px; margin-top: 26
 .sechead .link { font-size: var(--fs-sm); font-weight: 700; color: var(--muted); }
 
 /* next-up strip */
+.callbig { margin-top: 16px; border-radius: var(--r); background: var(--primary); color: var(--on-primary); padding: 18px; display: flex; flex-direction: column; gap: 12px; box-shadow: 0 18px 40px -18px rgba(255,107,74,.7); }
+.callbig .cbmain { display: flex; flex-direction: column; gap: 6px; text-align: left; color: inherit; width: 100%; }
+.callbig .cbmain .lg { color: var(--on-primary); opacity: .75; }
+.callbig .cbmain b { font-size: 34px; line-height: 1; }
+.callbig .fakein { display: flex; align-items: center; gap: 8px; margin-top: 6px; background: rgba(26,9,5,.12); border-radius: 14px; padding: 13px 14px; font-weight: 600; font-size: var(--fs-md); }
+.callbig .fakein svg { width: 18px; height: 18px; }
+.callbig .cbsug { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; margin: 0 -18px; padding: 0 18px; }
+.callbig .cbsug .pill { background: rgba(26,9,5,.14); color: var(--on-primary); border-color: transparent; white-space: nowrap; flex: none; }
+.cq { width: 100%; height: 54px; border-radius: 16px; border: 1px solid var(--line-2); background: var(--surface-2); color: var(--ink); font: 600 var(--fs-base, 16px)/1 var(--body); font-size: 16px; padding: 0 16px; }
+.cq:focus { outline: 2px solid var(--primary); outline-offset: 1px; }
+.ideas { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.ownrow { display: flex; align-items: center; gap: 12px; width: 100%; text-align: left; margin-top: 12px; padding: 12px; border-radius: 16px; background: var(--primary-soft); border: 1px solid var(--primary); color: var(--ink); }
+.ownrow b { display: block; font-size: var(--fs-md); } .ownrow small { color: var(--muted); font-size: var(--fs-xs); }
+.ownrow > svg { width: 18px; height: 18px; color: var(--primary); }
+.morerow { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 26px 0 8px; font-size: var(--fs-sm); }
+.gpreview .gface { cursor: pointer; }
 .nextup { margin-top: 16px; display: flex; align-items: center; gap: 12px; padding: 10px 10px 10px 14px; border-radius: 16px; background: var(--surface); border: 1px solid var(--line); width: 100%; }
 .nextup .clock { font-family: var(--display); font-weight: 900; font-size: 26px; color: var(--gold); min-width: 64px; }
 .nextup b { font-size: var(--fs-md); display: block; }
@@ -1286,11 +1302,12 @@ const TEMPLATES = [
   ['watch', '📺', 'Watch party', 'A call opens before every episode', { settle: 'manager' }],
   ['league', '🏈', 'Pick\'em league', 'Weekly slate, season table', { nods: 2 }],
   ['roommates', '🏠', 'Roommates', 'Chores, guests, who\'s home', { settle: 'manager' }],
-  ['office', '💼', 'Office pool', 'Awards, finals, baby pools', {}],
+  ['office', '💼', 'Office', 'Awards, finals, the baby\'s due date', {}],
   ['trip', '✈️', 'Trip', 'Flights, plans, who oversleeps', { settle: 'manager' }],
   ['sports', '🏀', 'Game nights', 'Live games, quarter calls', {}]
 ];
 const GCOLORS = ['#ff6b4a', '#7ce7e1', '#ffc94a', '#c7b8ff', '#ff8fc7', '#3ddc97'];
+const DEFNAME = { family: 'The Cohens', watch: 'Survivor night', league: 'Sunday pick\'em', roommates: 'Apt 5C', office: 'Team picks', trip: 'Lisbon trip', sports: 'Game nights', friends: 'The usuals' };
 const GEMOJI = ['🎉', '🏝️', '🍸', '👨‍👩‍👧', '🏠', '📺', '🏀', '💃', '✈️', '🌮', '🦄', '🔥'];
 
 function tvCard(x) {
@@ -1547,13 +1564,13 @@ function forYou() {
   const weight = { sports: 3, tv: 2, awards: 1, life: 1.5, friends: -5, world: 0, viral: 1.2 };
   const cats = Object.keys(parts).filter(c => parts[c].length && (T === 'all' || TOPIC_OF[c] === T))
     .sort((a, b) => (catScore(SCORE_OF[b]) * 10 + weight[b]) - (catScore(SCORE_OF[a]) * 10 + weight[a]));
-  const bands = cats.map(c => `<div class="band band-${c}">${bandBg(c)}<div class="bandhead"><div><div class="kicker">${BAND[c][1]}</div><h2 class="disp">${BAND[c][0]}</h2></div></div>${parts[c].join('')}</div>`).join('');
+  const shown = T === 'all' ? cats.slice(0, 3) : cats;
+  const bands = shown.map(c => `<div class="band band-${c}">${bandBg(c)}<div class="bandhead"><div><div class="kicker">${BAND[c][1]}</div><h2 class="disp">${BAND[c][0]}</h2></div></div>${parts[c].join('')}</div>`).join('');
   const topics = [['all', 'For you'], ['sports', 'Sports'], ['tv', 'TV'], ['trends', 'Trends'], ['life', 'Life'], ['world', 'World']].filter(([k]) => k === 'all' || Object.keys(parts).some(c => TOPIC_OF[c] === k && parts[c].length));
 
   const side = T === 'all' ? `
-    ${soon ? `<button class="nextup press" data-a="quick" data-v="${soon.id}"><span class="clock num" data-until="${soon.t}">${until(soon.t)}</span><span class="grow"><b>${soon.title}</b><small>${soon.sub} · no call yet</small></span><span class="plus">${I.plus}</span></button>` : ''}
+    <div class="callbig"><button class="cbmain press" data-a="compose"><span class="lg">Make a call</span><b class="disp">What do you want to call?</b><span class="fakein">${I.pen}<span>Type it, or pick one below</span></span></button><div class="cbsug">${(() => { const sg = suggest(); return [...sg.tonight.slice(0, 2), ...sg.again.slice(0, 1)].map(x => `<button class="pill" data-a="sug" data-v="${escH(x.go)}">${x.em} ${escH(x.q)}</button>`).join(''); })()}</div></div>
     <div class="bubbles">${GROUPS.map(g => `<button class="bubble press" data-a="group" data-v="${g.id}"><span class="rg ${g.todo ? 'hot' : ''}" ${g.color ? `style="background:${g.color}"` : ''}><span class="face">${g.em}</span>${g.todo ? `<span class="badge">${g.todo}</span>` : ''}</span><span>${g.name}</span></button>`).join('')}<button class="bubble press" data-a="newgroup"><span class="rg"><span class="face" style="color:var(--primary)">${I.plus}</span></span><span>New group</span></button></div>
-    ${unlockCard(true)}
     ${left ? `<button class="turn press" data-a="stack">
       <span class="layer l2"></span><span class="layer l1"></span>
       <span class="front"><span class="eyebrow" style="color:inherit;opacity:.7">Your turn · ${left} call${left > 1 ? 's' : ''} waiting</span>
@@ -1569,13 +1586,14 @@ function forYou() {
     <div class="topics">${topics.map(([k, l]) => `<button class="${S.topic === k ? 'on' : ''}" data-a="topic" data-v="${k}">${l}</button>`).join('')}</div></div>
     <aside class="fy-side">${side}</aside>
     <div class="fy-main">${bands || `<div class="card pad" style="margin-top:22px"><b>Nothing here yet</b><div class="muted" style="font-size:var(--fs-sm);margin-top:4px">Add topics in You → Your feed.</div></div>`}
+    ${T === 'all' && cats.length > 3 ? `<div class="morerow"><span class="muted">More to call in</span>${topics.filter(([k]) => k !== 'all').map(([k, l]) => `<button class="pill" data-a="topic" data-v="${k}">${l}</button>`).join('')}</div>` : ''}
     <div class="feedline" id="feedline"></div></div>
   </div>`;
 }
 
 function nav() {
   const b = (k, l, ic) => `<button data-a="tab" data-v="${k}" class="${S.tab === k ? 'on' : ''}">${I[ic]}${l}</button>`;
-  return `<nav class="nav"><div class="brand">${coin(30)}CallIt</div>${b('foryou', 'For you', 'bolt')}${b('groups', 'Groups', 'people')}<button data-a="newcall" aria-label="Make a call" style="display:grid;place-items:center"><span class="fab">${I.plus}<span class="navlabel">New call</span></span></button>${b('play', 'Play', 'racket')}${b('me', 'You', 'me')}
+  return `<nav class="nav"><div class="brand">${coin(30)}CallIt</div>${b('foryou', 'For you', 'bolt')}${b('groups', 'Groups', 'people')}<button data-a="compose" aria-label="Make a call" style="display:grid;place-items:center"><span class="fab">${I.plus}<span class="navlabel">New call</span></span></button>${b('play', 'Play', 'racket')}${b('me', 'You', 'me')}
     <div class="navgroups"><span class="eyebrow">Your groups</span>${GROUPS.map(g => `<button data-a="group" data-v="${g.id}"><span>${g.em}</span>${g.name}${g.todo ? `<span class="badge">${g.todo}</span>` : ''}</button>`).join('')}<button data-a="newgroup" style="color:var(--primary)">${I.plus}New group</button></div></nav>`;
 }
 
@@ -1625,11 +1643,11 @@ function confirmView() {
 }
 function shareView() {
   const Sh = S.share; const g = G(Sh.group); const t = TARGETS.find(x => x[0] === Sh.target);
-  const link = `call-it.app/c/k7q2`;
+  const link = linkFor('c', g.id).replace(/^https?:\/\//, '');
   const story = Sh.target === 'instagram' || Sh.target === 'tiktok' || Sh.target === 'snapchat';
   const iv = INV(g.id); const cl = iv.call || INV('surv').call; const sv = { t: cl.t, rt: cl.rt }; const when = `${dayName(sv.t)} ${fmtT(sv.t)}`;
   const linkCard = `<div class="lp"><div class="lpimg"><div class="row between" style="width:100%;align-items:flex-start"><span class="disp">${cl.q}</span><span class="coin" style="width:30px;height:30px">${COIN}</span></div>${timeline(sv.t, sv.rt, { cls: 'onimg' })}</div><div class="lpt"><b>Call it in ${g.name}</b><small>call-it.app · picks lock ${when}</small></div></div>`;
-  const msg = `<div class="msg">${cl.q} Picks lock ${when}. Call it 👇${cl.a.map((a, i) => `<br><span class="ans1" data-a="answerpage" data-v="${i}">${a} → ${link}/${a.toLowerCase().replace(/[^a-z0-9]+/g, '-')}</span>`).join('')}</div>`;
+  const msg = `<div class="msg">${cl.q} Picks lock ${when}. Call it 👇${cl.a.map((a, i) => `<br><span class="ans1" data-a="answerpage" data-v="${i}">${a} → ${link}-${i}</span>`).join('')}</div>`;
   const preview = story ? `<div class="sprev"><div class="scard mini"><div class="row between"><span class="pk">${g.name}</span><span class="coinbig" style="width:44px;height:44px">${COIN}</span></div>
       <h3 class="disp" style="font-size:40px">Call it.</h3><span class="qq">${cl.q}</span>
       <span class="pk" style="opacity:.85">Picks lock ${when}</span>
@@ -1653,7 +1671,6 @@ function shareView() {
     <div class="inner">
       <div class="lg" style="margin-top:4px">${g.em} ${g.name}</div>
       <h2 class="disp" style="font-size:36px;margin:4px 0 14px">Bring your people</h2>
-      ${unlockCard(false)}
       <div class="label">Send with</div>
       <div class="targets">${TARGETS.map(([id, l, c, svg]) => `<button class="target ${Sh.target === id ? 'on' : ''}" data-a="target" data-v="${id}"><span class="ti" style="background:${c}">${svg}</span>${l}</button>`).join('')}</div>
       <div class="label">What they get</div>
@@ -1877,15 +1894,15 @@ function signupView() {
   const others = V.g.people.filter(p => p !== 'you').slice(0, 4);
   return `<div class="signup" data-a="closesignup"><form class="sbox" id="signupform">
     <div class="grab"></div>
-    <div class="row">${avs(others)}<span class="muted" style="font-size:var(--fs-sm)">${others.map(p => P[p][0]).join(', ').replace(/, ([^,]*)$/, ' and $1')} ${others.length > 1 ? 'are' : 'is'} in</span></div>
-    <h3 class="disp">Join ${V.g.name}</h3>
+    ${S.signupMode === 'account' ? '<h3 class="disp">Create your account</h3>' : `<div class="row">${avs(others)}<span class="muted" style="font-size:var(--fs-sm)">${others.map(p => P[p][0]).join(', ').replace(/, ([^,]*)$/, ' and $1')} ${others.length > 1 ? 'are' : 'is'} in</span></div>
+    <h3 class="disp">Join ${V.g.name}</h3>`}
     <button type="button" class="btn gbtn block" data-a="google">${GOOGLE}Continue with Google</button>
     <div class="or">or</div>
     <div class="field2"><label for="su-email">Email</label><input id="su-email" type="email" autocomplete="email" placeholder="you@example.com"></div>
     <div class="field2"><label for="su-user">Username</label><input id="su-user" autocomplete="username" placeholder="3–20 letters, numbers or _"></div>
     <div class="field2"><label for="su-pass">Password</label><input id="su-pass" type="password" autocomplete="new-password" placeholder="At least 8 characters"></div>
-    <button type="submit" class="btn block">Create account and join</button>
-    <span class="muted" style="font-size:var(--fs-xs);text-align:center">Already have an account? <b style="color:var(--ink)">Sign in</b></span>
+    <button type="submit" class="btn block">${S.signupMode === 'account' ? 'Create account' : 'Create account and join'}</button>
+    <span class="muted" style="font-size:var(--fs-xs);text-align:center">You stay signed in on this device.</span>
   </form></div>`;
 }
 function answerView() {
@@ -2130,9 +2147,11 @@ function createView() {
   const C = S.create; const t = TEMPLATES.find(x => x[0] === C.tmpl);
   let body = '', foot = '';
   if (C.step === 0) {
-    body = `<h2 class="disp" style="font-size:46px;margin:6px 0 6px">New group</h2><p class="muted" style="margin:0 0 16px">What kind of group? It sets the rules. You can change them later.</p>
-      <div class="tmpls">${TEMPLATES.map(([id, em, tt, s]) => `<button class="tmpl ${C.tmpl === id ? 'on' : ''}" data-a="ctmpl" data-v="${id}"><span class="em">${em}</span><b>${tt}</b><small>${s}</small></button>`).join('')}</div>`;
-    foot = `<button class="btn block" data-a="cnext">Continue</button>`;
+    body = `<h2 class="disp" style="font-size:46px;margin:6px 0 4px">New group</h2><p class="muted" style="margin:0 0 16px">Name it, then send the link. You can change everything later.</p>
+      <div class="gpreview" style="--gc:${C.color}"><button class="gface" data-a="cemnext" aria-label="Change the emoji">${C.em}</button><span class="grow"><input id="gname" class="nameinput" value="${C.name.replace(/"/g, '&quot;')}" placeholder="${DEFNAME[C.tmpl]}" maxlength="24"><span class="muted" style="font-size:var(--fs-xs)">Tap the emoji to change it</span></span></div>
+      <div class="label">Who's it for?</div><div class="pills">${TEMPLATES.map(([id, em, tt]) => `<button class="pill ${C.tmpl === id ? 'on' : ''}" data-a="ctmpl" data-v="${id}">${em} ${tt}</button>`).join('')}</div>
+      <p class="muted" style="font-size:var(--fs-sm);margin:12px 0 0">${TEMPLATES.find(x => x[0] === C.tmpl)[3]}. ${ruleText({ ...RULES0, ...TEMPLATES.find(x => x[0] === C.tmpl)[4] })}</p>`;
+    foot = `<button class="btn block" data-a="cnext">Create and invite</button>`;
   } else if (C.step === 1) {
     body = `<div class="gpreview" style="--gc:${C.color};margin-top:6px"><span class="gface">${C.em}</span><span class="grow"><input id="gname" class="nameinput" value="${C.name.replace(/"/g, '&quot;')}" placeholder="Group name" maxlength="24"><span class="muted" style="font-size:var(--fs-xs)">${t[2]} · just you so far</span></span></div>
       <div class="label">Emoji</div><div class="emojis">${GEMOJI.map(e => `<button class="${C.em === e ? 'on' : ''}" data-a="cem" data-v="${e}">${e}</button>`).join('')}</div>
@@ -2145,12 +2164,12 @@ function createView() {
   } else {
     const slug = (C.name || 'group').toLowerCase().replace(/[^a-z0-9]+/g, '-').slice(0, 14) + '-k7q2';
     body = `<div style="text-align:center;margin:10px 0 18px"><span class="gface" style="--gc:${C.color};margin:0 auto;width:84px;height:84px;font-size:40px">${C.em}</span><h2 class="disp" style="font-size:44px;margin:12px 0 4px">${C.name}</h2><p class="muted" style="margin:0">is ready. Invite your people.</p></div>
-      <div class="invite"><span class="qr">${qrSvg(slug)}</span><span class="grow" style="display:flex;flex-direction:column;gap:8px;min-width:0"><span class="linkbox">call-it.app/join/${slug}</span><span class="muted" style="font-size:var(--fs-xs)">Sample code. Anyone with the link joins after signing in.</span></span></div>
-      <div class="tiles" style="margin-top:12px;grid-template-columns:repeat(3,1fr)">${[['💬', 'Group chat'], ['🔗', 'Copy link'], ['👥', 'Contacts']].map(([e, l]) => `<button class="tile press" data-a="cshare" data-v="${l}" style="min-height:76px;align-items:center;justify-content:center;text-align:center"><span style="font-size:22px">${e}</span><b>${l}</b></button>`).join('')}</div>
+      <div class="invite"><span class="qr">${qrSvg(slug)}</span><span class="grow" style="display:flex;flex-direction:column;gap:8px;min-width:0"><span class="linkbox">${linkFor('join', SAMPLE_FOR[C.tmpl] || 'dinner').replace(/^https?:\/\//, '')}</span><span class="muted" style="font-size:var(--fs-xs)">Anyone with the link can join. In this demo it opens a sample group.</span></span></div>
+      <div class="tiles" style="margin-top:12px;grid-template-columns:repeat(3,1fr)">${[['💬', 'WhatsApp', 'whatsapp'], ['✉️', 'Messages', 'messages'], ['🔗', 'Copy link', 'copy']].map(([e, l, v]) => `<button class="tile press" data-a="cshare" data-v="${v}" style="min-height:76px;align-items:center;justify-content:center;text-align:center"><span style="font-size:22px">${e}</span><b>${l}</b></button>`).join('')}</div>
       ${C.tmpl === 'watch' && C.auto ? `<div class="autocall" style="margin-top:12px"><span class="ibox" style="background:var(--primary-soft);color:var(--primary)">${I.clock}</span><span class="grow"><b style="font-size:var(--fs-md)">First auto call is set</b><div class="muted" style="font-size:var(--fs-xs)">${(TV.find(x => x.show === C.show) || {}).n || 'Next episode'}, ${tvWhen(TV.find(x => x.show === C.show) || TV[0])}</div></span></div>` : ''}`;
     foot = `<button class="btn block" data-a="cdone">Go to ${C.name}</button>`;
   }
-  return `<div class="sheet"><div class="scroll" style="padding-bottom:130px"><div class="bar"><button class="x" data-a="${C.step ? 'cback' : 'close'}" aria-label="Back">${C.step ? I.back : I.x}</button><span class="lg">${['Kind of group', 'Name and look', 'Invite'][C.step]}</span><span style="width:38px"></span></div>${body}</div>
+  return `<div class="sheet"><div class="scroll" style="padding-bottom:130px"><div class="bar"><button class="x" data-a="${C.step ? 'cback' : 'close'}" aria-label="Back">${C.step ? I.back : I.x}</button><span class="lg">${C.step ? 'Invite' : 'New group'}</span><span style="width:38px"></span></div>${body}</div>
     <div style="position:absolute;left:18px;right:18px;bottom:34px;z-index:55">${foot}</div></div>`;
 }
 
@@ -2207,7 +2226,8 @@ function nightView() {
 
 function meView() {
   const picked = INTERESTS.flatMap(([, , items]) => items).filter(([id]) => S.interests.has(id));
-  return `<div class="top"><div><div class="eyebrow">@aviv · 🇺🇸 United States</div><h1 class="disp">Aviv</h1></div></div>
+  const U = S.user;
+  return `<div class="top"><div><div class="eyebrow">${U ? '@' + escH(U.username) + ' · 🇺🇸 United States' : 'Not signed in'}</div><h1 class="disp">${U ? escH(U.name) : 'Guest'}</h1></div>${U ? '' : '<button class="btn sm" data-a="loginopen">Sign up</button>'}</div>
     <section class="block"><div class="tiles">
       <div class="card stat"><span class="eyebrow">Nods</span><span class="v num">${S.nods}</span></div>
       <div class="card stat"><span class="eyebrow">Streak</span><span class="v num">${S.streak}</span></div>
@@ -2225,7 +2245,131 @@ function meView() {
     ${appsSection()}
     <section class="block"><div class="sechead"><h2 class="disp">Alerts</h2><button data-a="lock" style="color:var(--primary);font-weight:800;font-size:var(--fs-sm)">Preview</button></div>
       <div class="list">${[['Before a call closes', 'When you haven\'t answered', true], ['Results', 'The moment a call is settled', true], ['Live score swings', 'Only games you called', false]].map(([t, s, on], i) => `<div class="li"><span class="grow"><span class="ttl">${t}</span><span class="sub">${s}</span></span><button class="switch ${S.alerts[i] ?? on ? 'on' : ''}" data-a="alert" data-v="${i}" role="switch" aria-label="${t}"></button></div>`).join('')}</div></section>
+    <section class="block"><div class="sechead"><h2 class="disp">Account</h2></div>
+      <div class="list"><div class="li"><span class="ibox">${I.me}</span><span class="grow"><span class="ttl">${U ? `Signed in with ${U.via}` : 'No account yet'}</span><span class="sub">${U ? `${U.email ? escH(U.email) + ' · ' : ''}since ${U.since}. You stay signed in on this device.` : 'Sign up to keep your calls and your groups.'}</span></span></div></div>
+      ${U ? '<button class="btn ghost block" data-a="logout" style="margin-top:10px">Sign out</button>' : ''}</section>
     <section class="block"><button class="btn ghost block" data-a="onboard">Replay the welcome</button></section>`;
+}
+
+
+/* ===== real links, sharing, saved login, the composer ===== */
+const BASE = location.origin + location.pathname;
+const linkFor = (kind, id) => `${BASE}#${kind}-${id}`;
+const escH = v => String(v ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const LS = {
+  get(k) { try { return JSON.parse(localStorage.getItem('callit.' + k)); } catch (_) { return null; } },
+  set(k, v) { try { v == null ? localStorage.removeItem('callit.' + k) : localStorage.setItem('callit.' + k, JSON.stringify(v)); } catch (_) {} }
+};
+S.user = LS.get('user'); S.history = LS.get('history') || []; S.compose = { q: '' };
+function signIn(u) { S.user = { ...u, since: new Date(now()).toISOString().slice(0, 10) }; LS.set('user', S.user); }
+const SAMPLE_FOR = { sports: 'hall', league: 'lions', watch: 'surv', family: 'fam', friends: 'dinner', roommates: 'dinner', office: 'dinner', trip: 'dinner' };
+const touch = () => matchMedia('(pointer: coarse)').matches;
+function copyText(t) {
+  try { navigator.clipboard.writeText(t).catch(() => fallbackCopy(t)); } catch (_) { fallbackCopy(t); }
+}
+function fallbackCopy(t) { const a = document.createElement('textarea'); a.value = t; a.style.position = 'fixed'; a.style.opacity = '0'; document.body.appendChild(a); a.select(); try { document.execCommand('copy'); } catch (_) {} a.remove(); }
+function openOut(u) { const w = window.open(u, '_blank', 'noopener'); if (!w) location.href = u; }
+// sends text and a link to a real app: WhatsApp, Telegram and X open their share pages, Messages and email open the phone's app
+function shareOut(target, d) {
+  const enc = encodeURIComponent; const full = `${d.text}\n${d.url}`;
+  if (target === 'whatsapp') { openOut(`https://wa.me/?text=${enc(full)}`); return toast('Opening WhatsApp.'); }
+  if (target === 'telegram') { openOut(`https://t.me/share/url?url=${enc(d.url)}&text=${enc(d.text)}`); return toast('Opening Telegram.'); }
+  if (target === 'x') { openOut(`https://x.com/intent/post?text=${enc(d.text)}&url=${enc(d.url)}`); return toast('Opening X.'); }
+  if (target === 'messages') { if (touch()) { location.href = `sms:?&body=${enc(full)}`; return; } copyText(full); return toast('Copied. Paste it into Messages.'); }
+  if (target === 'email') { location.href = `mailto:?subject=${enc(d.title || 'Call it with us')}&body=${enc(full)}`; return; }
+  if (target === 'more' && navigator.share) { navigator.share({ title: d.title, text: d.text, url: d.url }).catch(() => {}); return; }
+  copyText(d.url); toast('Link copied. Paste it anywhere.');
+}
+// draws a story card (1080 x 1920) so Instagram, TikTok and Snapchat get a real image
+async function cardPng(c) {
+  try { await document.fonts.ready; } catch (_) {}
+  const W = 1080, H = 1920, cv = document.createElement('canvas'); cv.width = W; cv.height = H; const x = cv.getContext('2d');
+  const g = x.createLinearGradient(0, 0, W, H); g.addColorStop(0, '#ff8a5c'); g.addColorStop(1, '#ff5a3c'); x.fillStyle = g; x.fillRect(0, 0, W, H);
+  x.fillStyle = '#1a0905'; x.font = '800 44px Figtree, system-ui, sans-serif'; x.fillText(c.kicker.toUpperCase(), 90, 180);
+  x.font = '900 290px "Big Shoulders Display", Impact, sans-serif'; c.big.split('\n').forEach((l, i) => x.fillText(l.toUpperCase(), 80, 640 + i * 260));
+  x.font = '800 78px Figtree, system-ui, sans-serif'; let y = 1250, line = '';
+  for (const w of c.q.split(' ')) { const t = line ? line + ' ' + w : w; if (x.measureText(t).width > 900 && line) { x.fillText(line, 90, y); y += 92; line = w; } else line = t; }
+  x.fillText(line, 90, y);
+  x.font = '700 50px Figtree, system-ui, sans-serif'; x.fillText(c.line, 90, y + 110);
+  x.fillStyle = '#1a0905'; x.beginPath(); x.roundRect ? x.roundRect(90, 1650, 900, 140, 70) : x.rect(90, 1650, 900, 140); x.fill();
+  x.fillStyle = '#ff8a5c'; x.font = '800 50px Figtree, system-ui, sans-serif'; x.textAlign = 'center'; x.fillText('TAP THE LINK TO CALL IT', W / 2, 1738); x.textAlign = 'left';
+  return new Promise(r => cv.toBlob(r, 'image/png'));
+}
+async function shareCard(app, c) {
+  toast(app === 'Save' ? 'Making your card.' : `Making your card for ${app}.`);
+  const blob = await cardPng(c); const file = new File([blob], 'callit-card.png', { type: 'image/png' });
+  if (app !== 'Save' && navigator.canShare && navigator.canShare({ files: [file] })) {
+    try { await navigator.share({ files: [file], text: `${c.q} ${c.url}` }); copyText(c.url); return toast(`Link copied too. Add it as a link sticker in ${app}.`); }
+    catch (e) { if (e.name === 'AbortError') return; }
+  }
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'callit-card.png'; document.body.appendChild(a); a.click(); a.remove();
+  if (app === 'Save') return toast('Card saved.');
+  copyText(c.url); toast(`Card saved and link copied. Post the card in ${app} and paste the link as a sticker.`);
+}
+function callShare(gid) {
+  const g = G(gid) || G('surv'); const cl = INV(g.id).call || INV('surv').call; const when = `${dayName(cl.t)} ${fmtT(cl.t)}`;
+  return { title: `Call it in ${g.name}`, url: linkFor('c', g.id), when, cl, g,
+    text: `${cl.q} Picks lock ${when}. Tap your answer:\n${cl.a.map((a, i) => `${a} → ${linkFor('c', g.id + '-' + i)}`).join('\n')}\n\nOr open it here:` };
+}
+// opens the right screen when someone arrives from a shared link
+function route() {
+  const h = decodeURIComponent(location.hash.slice(1)); let m;
+  if (!h) return;
+  if ((m = h.match(/^join-(\w+)$/)) && G(m[1])) return ACT.invite(m[1]);
+  if ((m = h.match(/^c-([a-z]+\d*)(?:-(\d))?$/)) && G(m[1])) { S.share = { group: m[1], target: 'whatsapp' }; S.invite = m[1]; S.view = 'join'; S.sheet = null; ACT.answerpage(m[2] || 0); return; }
+  if ((m = h.match(/^live-(\w+)$/))) { S.view = 'app'; return ACT.tab('play'); }
+  if (h === 'app') return ACT.homeapp();
+  if (h === 'new') { S.view = 'app'; return ACT.compose(); }
+  if (h === 'home') return ACT.gohome();
+}
+addEventListener('hashchange', route);
+// remembers what you call so the composer can suggest it again
+function remember(Q) {
+  try {
+    const ks = qKinds(); const k = ks.find(x => x.id === Q.kind) || ks[0]; const q = (Q.q || k.q(Q.ev) || '').trim();
+    if (!q || /^Tap here/.test(q)) return;
+    const go = Q.ev.id ? 'quick:' + Q.ev.id : 'own:' + q;
+    S.history = [{ q, go, group: Q.group, at: now() }, ...S.history.filter(h => h.q !== q)].slice(0, 6); LS.set('history', S.history);
+  } catch (_) {}
+}
+function ownCall(q, type) {
+  const t = (q || '').trim(); const g = G(S.lastGroup) || GROUPS[0];
+  const answers = type === 'who' ? g.people.map(p => P[p][0]) : ['Yes', 'No'];
+  openQuick({ world: true, ic: 'pen', kindLabel: 'Your own call', when: 'You set when it closes', counts: 'The manager records what happened. Write the details in the question.' },
+    { group: g.id, q: t ? (/[?!.]$/.test(t) ? t : t + '?') : (type === 'who' ? 'Who in the group will…?' : 'Tap here to write the question'), answers });
+}
+const LGI = { NBA: 'nba', NHL: 'nhl', NFL: 'nfl', EPL: 'epl', CBB: 'cbb', WCBB: 'wcbb' };
+function suggest() {
+  const soon = t => Date.parse(t) > now() && Date.parse(t) < now() + 36 * 3600e3;
+  const games = FEED.filter(e => e.st === 'pre' && soon(e.t) && interestOn(LGI[e.lg] || 'nba')).sort((a, b) => Date.parse(a.t) - Date.parse(b.t)).slice(0, 3)
+    .map(e => ({ em: { NBA: '🏀', CBB: '🏀', WCBB: '🏀', NHL: '🏒', NFL: '🏈', EPL: '⚽' }[e.lg] || '🏟️', q: `${e.aw.n} or ${e.h.n}?`, sub: `${LGNAME[e.lg] || e.lg} · ${dayName(e.t)} ${fmtT(e.t)}`, go: 'quick:' + e.id }));
+  const shows = TV.filter(x => tvState(x) === 'pre' && soon(x.t) && interestOn(SHOWS[x.show].interest)).slice(0, 2)
+    .map(x => ({ em: '📺', q: `${x.n}: ${(TVK[x.show] || TVK.def)[0].t.replace(/\?$/, '')}?`, sub: `${x.net} · ${dayName(x.t)} ${fmtT(x.t)}`, go: 'quick:' + x.id }));
+  const mine = S.history.filter(h => !h.go.startsWith('quick:') || (EV(h.go.slice(6)) || {}).st !== 'post')
+    .map(h => ({ em: '↺', q: h.q, sub: `You called this · ${(G(h.group) || {}).name || 'your group'}`, go: h.go }));
+  const sv = TV.find(x => x.show === 'survivor');
+  const habits = [sv && { em: '🏝️', q: 'Survivor: who gets voted out?', sub: 'You call this every Wednesday · Survivor Wed', go: 'quick:' + sv.id },
+    { em: '🍝', q: 'Will Sam be 20+ min late Friday?', sub: 'Dinner crew calls this most weeks', go: 'friends:dinner' },
+    { em: '🏈', q: 'Who tops the Lions Den in week 9?', sub: 'Your fantasy league', go: 'friends:fantasy' }].filter(Boolean);
+  const again = [...mine, ...habits.filter(x => !mine.some(m => m.q === x.q))].slice(0, 4);
+  return { again, tonight: [...games, ...shows] };
+}
+const IDEAS = [['👍', 'Yes or no', 'idea:yn'], ['🙋', 'Who in the group…', 'idea:who'], ['⏰', 'Who\'s late', 'friends:dinner'], ['🎾', 'Score our match', 'friends:match']];
+function composeView() {
+  const raw = S.compose.q; const q = raw.trim().toLowerCase(); const sg = suggest();
+  const f = arr => q ? arr.filter(x => (x.q + ' ' + x.sub).toLowerCase().includes(q)) : arr;
+  const sec = (title, arr) => arr.length ? `<div class="label">${title}</div><div class="list">${arr.map(x => `<button class="li press" data-a="sug" data-v="${escH(x.go)}"><span class="ibox" style="font-size:20px">${x.em}</span><span class="grow"><span class="ttl">${escH(x.q)}</span><span class="sub">${escH(x.sub)}</span></span><span class="plus">${I.plus}</span></button>`).join('')}</div>` : '';
+  const a = f(sg.again), t = f(sg.tonight);
+  return `<div class="scrim" data-a="close"></div><div class="bottom" role="dialog" aria-label="Make a call">
+    <div class="grab"></div>
+    <div class="inner">
+      <h2 class="disp" style="font-size:34px;margin:6px 0 12px">What do you want to call?</h2>
+      <input id="cq" class="cq" placeholder="Type anything. Is Sam late again?" value="${escH(raw)}" autocomplete="off" maxlength="90" enterkeyhint="go">
+      ${q ? `<button class="ownrow press" data-a="sug" data-v="own:"><span class="ibox">${I.pen}</span><span class="grow"><b>Call “${escH(raw.trim())}”</b><small>Yes or no, in ${escH((G(S.lastGroup) || GROUPS[0]).name)}. You can change it next.</small></span>${I.arrow}</button>`
+        : `<div class="ideas">${IDEAS.map(([e, l, go]) => `<button class="pill" data-a="sug" data-v="${go}">${e} ${l}</button>`).join('')}</div>`}
+      ${sec('Call it again', a)}${sec('Coming up', t)}
+    </div>
+  </div>`;
 }
 
 /* ===== render ===== */
@@ -2237,11 +2381,11 @@ function render() {
   const same = S._last === S.sheet; const sameOnb = S._lastOnb === (S.onb && S.onb.step);
   const focus = document.activeElement && document.activeElement.id;
   const body = { foryou: forYou, groups: groupsView, night: playView, play: playView, me: meView }[S.tab]();
-  const over = { stack: stackView, quick: quickSheet, slate: slateView, detail: detailView, create: createView, share: shareView }[S.sheet]?.() || '';
+  const over = { compose: composeView, stack: stackView, quick: quickSheet, slate: slateView, detail: detailView, create: createView, share: shareView }[S.sheet]?.() || '';
   const scrim = ['stack', 'slate', 'detail', 'create'].includes(S.sheet) ? '<div class="scrim deskonly" data-a="close"></div>' : '';
   const vt = {}; app.querySelectorAll('video').forEach(v => { vt[v.getAttribute('src') || v.currentSrc] = v.currentTime; });
   const hs = app.querySelector('.home, .join'); const hkeep = hs ? [hs.className.split(' ')[0], hs.scrollTop] : null;
-  app.innerHTML = `${S.view === 'home' ? homeView() : ''}${S.view === 'join' ? joinView() + (S.signup ? signupView() : '') : ''}<div class="scroll">${body}</div>${nav()}${scrim}${over}${S.moment ? momentView() : ''}${S.story ? storyView() : ''}${S.onb ? onboardView() : ''}${S.lock ? lockView() : ''}${S.confirm ? confirmView() : ''}${S.answerOpen ? answerView() : ''}${S.toast ? `<div class="toast">${coin()}<span>${S.toast.t}</span>${S.toast.undo ? '<button data-a="undo">Undo</button>' : ''}</div>` : ''}`;
+  app.innerHTML = `${S.view === 'home' ? homeView() : ''}${S.view === 'join' ? joinView() : ''}${S.signup ? signupView() : ''}<div class="scroll">${body}</div>${nav()}${scrim}${over}${S.moment ? momentView() : ''}${S.story ? storyView() : ''}${S.onb ? onboardView() : ''}${S.lock ? lockView() : ''}${S.confirm ? confirmView() : ''}${S.answerOpen ? answerView() : ''}${S.toast ? `<div class="toast">${coin()}<span>${S.toast.t}</span>${S.toast.undo ? '<button data-a="undo">Undo</button>' : ''}</div>` : ''}`;
   const nsc = app.querySelector(':scope > .scroll'); if (nsc && !S.reset) nsc.scrollTop = keep; S.reset = false;
   if (same && S.sheet) { const o = app.querySelector('.bottom .inner, .sheet .scroll'); if (o) o.scrollTop = okeep; app.querySelectorAll('.bottom, .sheet, .scrim').forEach(x => x.style.animation = 'none'); }
   if (S.onb && sameOnb) { const o = app.querySelector('.onb .scroll'); if (o) o.scrollTop = onbkeep; app.querySelector('.onb').style.animation = 'none'; }
@@ -2250,7 +2394,7 @@ function render() {
   if (hkeep) { const h = app.querySelector('.' + hkeep[0]); if (h) h.scrollTop = hkeep[1]; }
   S._last = S.sheet; S._lastOnb = S.onb && S.onb.step;
   app.querySelectorAll('video').forEach(v => { const t = vt[v.getAttribute('src')]; if (t) { try { v.currentTime = t; } catch (_) {} } });
-  if (focus === 'rosterin' || focus === 'gname') { const f = document.getElementById(focus); if (f) { f.focus(); const v = f.value; f.setSelectionRange?.(v.length, v.length); } }
+  if (focus === 'rosterin' || focus === 'gname' || focus === 'cq') { const f = document.getElementById(focus); if (f) { f.focus(); const v = f.value; f.setSelectionRange?.(v.length, v.length); } }
   if (S.sheet === 'stack') bindSwipe();
   feedStat();
   document.querySelectorAll('#jump button').forEach(b => b.classList.toggle('on', b.dataset.v === (S.onb ? 'onboard' : S.lock ? 'lock' : S.sheet || S.tab)));
@@ -2265,6 +2409,7 @@ function openQuick(ev, opts = {}) {
   const k = kinds.find(x => x.id === S.quick.kind); if (k && k.how === 'number') S.quick.rules.how = 'number';
   S.sheet = 'quick'; render();
 }
+function signupDone() { if (S.signupMode === 'account') { S.signup = false; S.signupMode = null; render(); return toast(`Account saved, @${S.user.username}. You stay signed in on this device.`); } finishSignup(); }
 function finishSignup() { const th = INV(S.invite).theme; S.signup = false; S.view = 'app'; S.tab = 'foryou'; S.onb = { step: 1, country: 'US', picks: new Set({ tv: ['survivor', 'traitors', 'awards'], sports: ['nba', 'cbb', 'nfl'], life: ['holidays', 'baby', 'dinner'] }[th]), joining: true }; render(); }
 const qKinds = () => { const e = S.quick.ev; return e.kinds || (e.tv ? (TVK[e.show] || TVK.def) : KINDS[S.quick.sport] || KINDS.LIFE); };
 const MATCH_EV = { match: true, aw: { a: 'A·N', n: 'Aviv & Noa', c: '#2f6f6b' }, h: { a: 'D·S', n: 'Dev & Sam', c: '#8a4a2a' } };
@@ -2279,6 +2424,12 @@ const ACT = {
   group: v => { S.group = v; S.tab = 'groups'; S.sheet = null; S.reset = true; render(); },
   stack: () => { if (S.di >= S.deck.length) { S.deck = DECK0.map(c => ({ ...c })); S.di = 0; } S.sheet = 'stack'; render(); },
   close: () => { S.sheet = null; render(); },
+  compose: () => { S.compose = { q: '' }; S.sheet = 'compose'; render(); setTimeout(() => { if (!touch()) document.getElementById('cq')?.focus(); }, 60); },
+  sug: v => { const i = v.indexOf(':'); const k = v.slice(0, i), id = v.slice(i + 1); S.sheet = null;
+    if (k === 'quick') return ACT.quick(id); if (k === 'friends') return ACT.friends(id); if (k === 'life') return ACT.life(id);
+    if (k === 'idea') return ownCall(S.compose.q, id); return ownCall(id || S.compose.q, 'yn'); },
+  logout: () => { S.user = null; LS.set('user', null); render(); toast('Signed out on this device.'); },
+  loginopen: () => { S.signupMode = 'account'; S.signup = true; render(); },
   newcall: () => { const e = FEED.find(x => x.st !== 'post' && dayKey(x.t) === dayKey(now())) || FEED[0]; openQuick(e); },
   quick: v => { const e = EV(v); if (e) openQuick(e); },
   quickkind: v => openQuick(EV(S.detail) || DEMO, { kind: v }),
@@ -2296,7 +2447,7 @@ const ACT = {
   savehouse: () => { S.quick.save = !S.quick.save; render(); },
   post: () => {
     const Q = S.quick; const g = G(Q.group); if (Q.save) { const { how, ...rest } = Q.rules; g.rules = { ...g.rules, ...rest, how: how === 'number' ? g.rules.how : how }; }
-    S.lastGroup = Q.group; if (Q.ev.id) S.mine[Q.ev.id] = true;
+    S.lastGroup = Q.group; if (Q.ev.id) S.mine[Q.ev.id] = true; remember(Q);
     const kinds = qKinds(); const k = kinds.find(x => x.id === Q.kind) || kinds[0];
     const numberMode = !Q.ev.world && (k.how === 'number' || Q.rules.how === 'number');
     const roster = k.roster ? (S.rosters[Q.ev.show] || []) : null;
@@ -2330,8 +2481,9 @@ const ACT = {
   closeconfirm: () => { S.confirm = null; render(); },
   share: v => { S.confirm = null; S.share = { group: v || S.group || 'surv', target: 'whatsapp' }; S.sheet = 'share'; render(); },
   target: v => { S.share.target = v; render(); },
-  sendshare: () => { const t = S.share.target; if (t === 'copy') { try { navigator.clipboard.writeText('https://call-it.app/c/k7q2').catch(() => {}); } catch (_) {} }
-    S.sheet = null; S.joined = Math.min(5, S.joined + 1); toast(t === 'copy' ? 'Link copied.' : `In the app this opens ${TARGETS.find(x => x[0] === t)[1]} with the message ready. ${S.joined}/5 joined.`); },
+  sendshare: () => { const t = S.share.target; const d = callShare(S.share.group); S.sheet = null; render();
+    if (['instagram', 'tiktok', 'snapchat'].includes(t)) return shareCard(TARGETS.find(x => x[0] === t)[1], { kicker: d.g.name, big: 'Call\nit.', q: d.cl.q, line: `Picks lock ${d.when}`, url: d.url });
+    shareOut(t, d); },
   answerpage: v => { S.answer = { pick: +v, name: '', saved: false, group: S.share?.group || S.invite }; S.answerOpen = true; render(); },
   closeanswer: () => { S.answerOpen = false; render(); },
   apick: v => { S.answer.pick = +v; render(); },
@@ -2346,14 +2498,14 @@ const ACT = {
   homego: v => { S.view = 'app'; if (v === 'play') ACT.tab('play'); else if (v === 'trends') ACT.topictrends(); else if (v === 'share') { S.tab = 'groups'; S.group = 'surv'; ACT.share('surv'); } else { ACT.tab('me'); S.resyOpen = true; render(); } },
   hscroll: v => { const h = document.querySelector('.home'); const t = document.getElementById('h-' + v); if (!h || !t) return; const top = t.offsetTop - (h.querySelector('.hnav')?.offsetHeight || 0); h.scrollTo({ top, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' }); setTimeout(() => { if (Math.abs(h.scrollTop - top) > 4) h.scrollTop = top; }, 900); },
   invite: v => { S.invite = v; S.view = 'join'; S.sheet = null; S.signup = false; S.answerOpen = false; render(); const j = document.querySelector('.join'); if (j) j.scrollTop = 0; },
-  joinstart: () => { S.signup = true; render(); },
-  closesignup: () => { S.signup = false; render(); },
-  google: () => finishSignup(),
+  joinstart: () => { if (S.user) { S.view = 'app'; S.tab = 'foryou'; S.reset = true; return toast(`Welcome back, @${S.user.username}. You joined ${G(S.invite).name}.`); } S.signupMode = null; S.signup = true; render(); },
+  closesignup: () => { S.signup = false; S.signupMode = null; render(); },
+  google: () => { const em = (document.getElementById('su-email') || {}).value || ''; signIn({ name: em ? em.split('@')[0] : 'You', username: (em.split('@')[0] || 'you').toLowerCase().replace(/[^a-z0-9_]/g, '').slice(0, 20) || 'you', email: em, via: 'Google' }); signupDone(); },
   playtab: v => { S.playTab = v; render(); },
   msport: v => { S.match = newMatch(v, S.match.a, S.match.b); render(); },
   mpoint: v => { S.match = point(S.match, +v); render(); if (S.match.done !== null) { S.nods += 1; toast('Match over. Calls on it are settled and posted to Padel Tue.'); } },
   mundo: () => { S.match = undoPoint(S.match); render(); },
-  mshare: () => toast('Live score link copied: call-it.app/live/padel-tue. Anyone in the group can watch it update.'),
+  mshare: () => { copyText(linkFor('live', 'padel')); toast('Live score link copied. Anyone in the group can watch it update.'); },
   mnext: () => { const m = S.match; S.matchNo++; S.match = newMatch(m.sport, [m.a[0], m.b[0]], [m.a[1], m.b[1]]); toast(`Match ${S.matchNo} is on. Two calls are open for it.`); },
   newduel: () => { S.duels.unshift({ vs: 'dev', call: 'Bills or Ravens on Sunday?', mine: 'Bills', theirs: 'Ravens', when: 'Sun ~4:15 PM', st: 'open' }); toast('Duel sent to Dev: Bills or Ravens. He takes the other side or passes.'); },
   leaguejoin: () => toast('Enter the code another group shares. Your group joins as a team, and your picks stay private.'),
@@ -2387,16 +2539,18 @@ const ACT = {
   life: v => { const l = LIFE.find(x => x.id === v); openQuick({ life: true, em: l.em, kindLabel: l.cat === 'tv' ? 'Award show' : 'Life and family', title: l.t, when: l.when, kinds: l.kinds, group: l.group }); },
   newgroup: () => { S.create = { step: 0, tmpl: 'friends', name: '', em: '🎉', color: '#ff6b4a', show: 'survivor', auto: true, gentle: true }; S.sheet = 'create'; render(); },
   ctmpl: v => { const t = TEMPLATES.find(x => x[0] === v); S.create.tmpl = v; S.create.em = t[1].length > 2 && GEMOJI.includes(t[1]) ? t[1] : ({ family: '👨‍👩‍👧', watch: '📺', roommates: '🏠', trip: '✈️', sports: '🏀', league: '🏀', office: '🎉', friends: '🎉' }[v]); render(); },
-  cnext: () => { const C = S.create; if (C.step === 0 && !C.name) C.name = { family: 'The Cohens', watch: 'Survivor night', league: 'Sunday pick\'em', roommates: 'Apt 5C', office: 'Team pool', trip: 'Lisbon trip', sports: 'Game nights', friends: 'The usuals' }[C.tmpl];
+  cnext: () => { const C = S.create; if (C.step === 0 && !C.name.trim()) C.name = DEFNAME[C.tmpl];
+    if (C.step === 0) C.step = 1;
     if (C.step === 1) { const t = TEMPLATES.find(x => x[0] === C.tmpl); GROUPS.push({ id: 'g' + GROUPS.length, mgr: 'you', name: C.name.trim(), em: C.em, color: C.color, people: ['you'], todo: 0, rules: { ...RULES0, ...t[4] } }); S.newId = 'g' + (GROUPS.length - 1); }
     C.step++; render(); },
-  cback: () => { S.create.step--; render(); },
+  cback: () => { S.sheet = null; S.create = null; render(); },
+  cemnext: () => { const C = S.create; C.em = GEMOJI[(GEMOJI.indexOf(C.em) + 1) % GEMOJI.length]; render(); },
   cem: v => { S.create.em = v; render(); },
   ccolor: v => { S.create.color = v; render(); },
   cshow: v => { S.create.show = v; render(); },
   cauto: () => { S.create.auto = !S.create.auto; render(); },
   cgentle: () => { S.create.gentle = !S.create.gentle; render(); },
-  cshare: v => { const id = S.newId; S.sheet = null; S.create = null; S.group = id; ACT.share(id); },
+  cshare: v => { const C = S.create; shareOut(v, { title: `Join ${C.name} on CallIt`, text: `Join ${C.name} on CallIt. We call games, shows and life stuff before it happens. Free, no money.`, url: linkFor('join', SAMPLE_FOR[C.tmpl] || 'dinner') }); },
   cdone: () => { const id = S.newId; S.sheet = null; S.create = null; S.lastGroup = id; ACT.group(id); },
   onboard: () => { S.onb = { step: 0, country: 'US', picks: new Set() }; render(); },
   editinterests: () => { S.onb = { step: 1, country: 'US', picks: new Set(S.interests), edit: true }; render(); },
@@ -2405,11 +2559,12 @@ const ACT = {
   onbnext: () => { if (S.onb.step === 1) { S.interests = new Set(S.onb.picks); if (S.onb.edit || S.onb.joining) return ACT.onbdone(); } S.onb.step++; render(); },
   onbback: () => { S.onb.step--; render(); },
   onbdone: () => { const n = S.interests.size; const joining = S.onb && S.onb.joining; S.onb = null; S.view = 'app'; if (joining) { S.reset = true; S.tab = 'foryou'; S.topic = 'all'; S.sheet = null; return toast(`You joined ${G(S.invite).name}. Your first call is waiting.`); } S.tab = 'foryou'; S.topic = 'all'; S.sheet = null; S.reset = true; toast(`Your feed is set: ${n} topics. Change them in You.`); },
-  onbgroup: v => { S.onb = null; ACT.newgroup(); S.create.tmpl = v; ACT.ctmpl(v); S.create.name = ''; ACT.cnext(); },
+  onbgroup: v => { S.onb = null; ACT.newgroup(); ACT.ctmpl(v); },
   onbjoin: () => { S.onb = null; S.tab = 'foryou'; toast('Open the invitation link from your friend and you land in the group.'); },
   story: () => { S.story = true; render(); },
   closestory: () => { S.story = false; render(); },
-  shareto: v => { S.story = false; toast(v === 'Save' ? 'Card saved to Photos.' : `In the app this opens ${v} with the card ready to post.`); },
+  shareto: v => { S.story = false; render(); const c = { kicker: 'Hall 4B · Oct 27', big: 'Called\nit.', q: 'Nets or Celtics tonight?', line: 'Celtics · locked in 6:12 PM · 3 of 6 got it', url: linkFor('join', 'hall') };
+    if (v === 'Messages') return shareOut('messages', { text: 'Called it. Celtics, locked in at 6:12 PM.', url: c.url }); shareCard(v, c); },
   nextcall: () => { S.moment = false; ACT.quick((TV.find(x => x.show === 'traitors') || TV[0]).id); },
   rmroster: v => { const sh = S.quick.ev.show; S.rosters[sh].splice(+v, 1); render(); },
   alert: v => { S.alerts[v] = !(S.alerts[v] ?? (v !== '2')); render(); },
@@ -2445,10 +2600,12 @@ phone.addEventListener('click', e => {
   if ((b.classList.contains('story') || b.classList.contains('signup')) && e.target !== b) return;
   const f = ACT[b.dataset.a]; if (f) { e.preventDefault(); e.stopPropagation(); f(b.dataset.v); }
 });
-phone.addEventListener('input', e => { if (e.target.id === 'qtext' && S.quick) S.quick.q = e.target.textContent; if (e.target.id === 'gname' && S.create) { S.create.name = e.target.value; const b = phone.querySelector('[data-a="cnext"]'); if (b) { b.disabled = !e.target.value.trim(); b.textContent = 'Create ' + (e.target.value.trim() || 'group'); } } });
+phone.addEventListener('input', e => { if (e.target.id === 'qtext' && S.quick) S.quick.q = e.target.textContent; if (e.target.id === 'gname' && S.create) { S.create.name = e.target.value; } });
 phone.addEventListener('input', e => { if (e.target.id === 'mynum' && S.quick) { S.quick.mine = e.target.value.trim(); const b = document.getElementById('postbtn'); const g = G(S.quick.group); const m = g.mgr || 'you'; if (b) { b.disabled = !S.quick.mine; b.textContent = !S.quick.mine ? 'Pick your call to post' : m === 'you' ? `Publish and lock in “${S.quick.mine}”` : `Suggest to ${P[m][0]} with “${S.quick.mine}”`; } } });
 phone.addEventListener('change', e => { if (e.target.id === 'aname' && S.answer) S.answer.name = e.target.value; });
-phone.addEventListener('submit', e => { if (e.target.id === 'signupform') { e.preventDefault(); finishSignup(); } });
+phone.addEventListener('submit', e => { if (e.target.id === 'signupform') { e.preventDefault(); const v = id => (document.getElementById(id) || {}).value || ''; const u = v('su-user').trim() || v('su-email').split('@')[0] || 'you'; signIn({ name: u, username: u.toLowerCase(), email: v('su-email'), via: 'email' }); signupDone(); } });
+phone.addEventListener('input', e => { if (e.target.id === 'cq') { S.compose.q = e.target.value; render(); } });
+phone.addEventListener('keydown', e => { if (e.target.id === 'cq' && e.key === 'Enter' && S.compose.q.trim()) { e.preventDefault(); ACT.sug('own:'); } });
 phone.addEventListener('keydown', e => { if (e.key === 'Enter' && e.target.id === 'postlink') ACT.postcall(); if (e.key === 'Enter' && e.target.id === 'resylink') ACT.resyparse(); });
 phone.addEventListener('keydown', e => { if (e.target.id === 'rosterin' && e.key === 'Enter' && e.target.value.trim()) { const sh = S.quick.ev.show; (S.rosters[sh] = S.rosters[sh] || []).push(e.target.value.trim()); render(); } });
 
@@ -2497,5 +2654,5 @@ async function loadFeed() {
   } catch (_) { /* keep the built-in snapshot */ }
 }
 function applyWeather() { const L = LIFE.find(l => l.id === 'snow'); if (L && WX) { const sn = Math.max(...WX.days.map(d => d.snow_cm)); L.when = `Forecast: ${sn} cm of snow in 7 days · lows ${Math.round(Math.min(...WX.days.map(d => d.lo_f)))}°F (Open-Meteo${WX.live ? ', live' : ''})`; } }
-render(); loadFeed().then(async () => { applyWeather(); render(); pull(); pullTV(); await Promise.all([liveTrends(), liveWeather()]); applyWeather(); if (!S.sheet && !S.onb && S.view !== 'join') render(); });
+render(); route(); loadFeed().then(async () => { applyWeather(); render(); pull(); pullTV(); await Promise.all([liveTrends(), liveWeather()]); applyWeather(); if (!S.sheet && !S.onb && S.view !== 'join') render(); });
 </script>
